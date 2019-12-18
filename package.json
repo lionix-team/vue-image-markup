@@ -1,7 +1,7 @@
 {
   "name": "vue-image-markup",
-  "version": "1.0.0",
-  "description": "Vue Image Markup",
+  "version": "1.0.1",
+  "description": "vue-image-markup will provide you to edit uploaded image easily and save it.",
   "main": "src/Editor.vue",
   "repository": {
     "type": "git",

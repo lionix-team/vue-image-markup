@@ -62,10 +62,10 @@ export default (function () {
 
         if(color && color !== params.stroke){
             color = params.stroke;
-            drag = true;
+            // drag = true;
+            new Arrow(canvas,draggable,params)
             return Arrow;
         }
-
         properties = params;
         if(properties){
             fillArrow = params.fill;

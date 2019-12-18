@@ -12,12 +12,14 @@ export default (function () {
         }
         if(color && color !== params.stroke){
             color = params.stroke;
+            shape = type;
+            new Shape(canvas,true,shape,params)
             return Shape;
         }
-        if((shape && shape !== type) ){
+        if((shape && shape !== type)){
             shape = type;
             drag = true;
-            new Shape(canvas,draggable,shape,params)
+            new Shape(canvas,true,shape,params)
             return Shape;
         }
         properties = params;
