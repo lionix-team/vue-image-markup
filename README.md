@@ -161,7 +161,7 @@ data(){
         imageUrl:"example.png"
      }
 },
-methods:{
+mounted:{
     this.$refs.editor.setBackgroundImage(this.imageUrl);
 }
 ```
@@ -172,7 +172,7 @@ methods:{
  this.$refs.editor.uploadImage(e)
 ```
 ## Function saveImage()
-##### `saveImage()` to save your image,which returns image in base64 format.
+##### `saveImage()` to save image,which returns image in base64 format.
 ```javascript
  this.$refs.editor.saveImage()
 ```

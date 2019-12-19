@@ -9,22 +9,21 @@
     import Shape from './assets/js/shape';
     import Text from './assets/js/text';
     import Arrow from './assets/js/arrow';
-
     export default {
         name: 'Editor',
         props: ['canvasWidth', 'canvasHeight'],
         data() {
-            return {
+            return{
                 canvas: null,
-                pointerX: null,
-                pointerY: null,
+                pointerX:null,
+                pointerY:null,
                 createCircle: false,
                 createRect: false,
                 createArrow: false,
-                createText: false,
-                circle: null,
-                currentActiveMethod: null,
-                currentActiveTool: null,
+                createText:false,
+                circle:null,
+                currentActiveMethod:null,
+                currentActiveTool:null,
                 objects: [],
                 width: null,
                 height: null,

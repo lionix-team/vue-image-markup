@@ -25,7 +25,6 @@ export default (function () {
     Text.prototype.bindEvents = function () {
         let inst = this;
         inst.selectable = true;
-        // inst.canvas.off("mouse:down")
         inst.canvas.on("mouse:down", function (o) {
             inst.onMouseDown(o);
         });
