@@ -27,19 +27,13 @@ Then you'll be able to use Editor component.
 
 You must give your editor component ```ref```,which will help you to call the functions to set editor mode,clean objects or undo/redo your changes.
 ```vue
-<Editor :setBackgroundImage="url" :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" ref="editor"/>
+<Editor :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" ref="editor"/>
 
 mounted() {
     $this.$refs.editor.set(this.editor.mode,this.editor.options);
-},
-data(){
-    return:{
-        url:"example.png"   
-     }
 }
 
 ```
-`setBackgroundImage` prop will set editor background image
 
 `canvasWidth` prop will set editor width
 
@@ -159,15 +153,28 @@ or you can customize your editor's free drawing mode styles by overwriting defau
  this.$refs.editor.set('freeDrawing',customizeFreeDrawing)
 ```
 
-## Function changeColor(`colorHex`)
-##### `changeColor(`colorHex`)` to set color for all objects
-```javascript
- this.$refs.editor.changeColor('#228B22')
+## Function setBackgroundImage(imageUrl)
+##### `setBackgroundImage(imageUrl)` to set editor background image
+```vue
+data(){
+    return{
+        imageUrl:"example.png"
+     }
+},
+methods:{
+    this.$refs.editor.setBackgroundImage(this.imageUrl);
+}
 ```
+
 ## Function uploadImage(e)
 ##### `uploadImage(e)` to set background of canvas
 ```javascript
  this.$refs.editor.uploadImage(e)
+```
+## Function saveImage()
+##### `saveImage()` to save your image,which returns image in base64 format.
+```javascript
+ this.$refs.editor.saveImage()
 ```
 
 ## Function clear()

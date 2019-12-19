@@ -62,10 +62,10 @@ export default (function () {
 
         if(color && color !== params.stroke){
             color = params.stroke;
-            // drag = true;
             new Arrow(canvas,draggable,params)
             return Arrow;
         }
+
         properties = params;
         if(properties){
             fillArrow = params.fill;
@@ -91,26 +91,26 @@ export default (function () {
             inst.canvas.renderAll()
         };
         inst.selectable = true;
-        
-            inst.canvas.off('mouse:down');
-            inst.canvas.on('mouse:down', function (o) {
-                inst.onMouseDown(o);
-            });
-            inst.canvas.on('mouse:move', function (o) {
-                inst.onMouseMove(o);
-            });
-            inst.canvas.on('mouse:up', function (o) {
-                inst.onMouseUp(o);
-                
-            });
-            inst.canvas.on('object:moving', function () {
-                inst.disable();
-            });
-            
+
+        inst.canvas.off('mouse:down');
+        inst.canvas.on('mouse:down', function (o) {
+            inst.onMouseDown(o);
+        });
+        inst.canvas.on('mouse:move', function (o) {
+            inst.onMouseMove(o);
+        });
+        inst.canvas.on('mouse:up', function (o) {
+            inst.onMouseUp(o);
+
+        });
+        inst.canvas.on('object:moving', function () {
+            inst.disable();
+        });
+
 
     };
     Arrow.prototype.onMouseUp = function () {
-        
+
         let inst = this;
         if (!inst.isEnable()) {
             return;
@@ -127,7 +127,7 @@ export default (function () {
             inst.canvas.renderAll();
         }
         inst.disable();
-    
+
 
     };
     Arrow.prototype.onMouseMove = function (o) {

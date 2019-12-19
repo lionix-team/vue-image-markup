@@ -54,20 +54,20 @@ export default (function () {
             inst.canvas.renderAll()
         };
         inst.selectable = true;
-                inst.canvas.off('mouse:down');
-                
-                inst.canvas.on('mouse:down', function (o) {
-                    inst.onMouseDown(o);
-                });
-                inst.canvas.on('mouse:move', function (o) {
-                    inst.onMouseMove(o);
-                });
-                inst.canvas.on('mouse:up', function (o) {
-                    inst.onMouseUp(o);
-                });
-                inst.canvas.on('object:moving', function () {
-                    inst.disable();
-                });
+        inst.canvas.off('mouse:down');
+
+        inst.canvas.on('mouse:down', function (o) {
+            inst.onMouseDown(o);
+        });
+        inst.canvas.on('mouse:move', function (o) {
+            inst.onMouseMove(o);
+        });
+        inst.canvas.on('mouse:up', function (o) {
+            inst.onMouseUp(o);
+        });
+        inst.canvas.on('object:moving', function () {
+            inst.disable();
+        });
 
 
 
@@ -149,10 +149,10 @@ export default (function () {
     };
 
     Shape.prototype.onMouseDown = function (o) {
-        
+
         let inst = this;
         if(!drag){
-            
+
             if( inst.canvas.getActiveObject()){
                 inst.canvas.getActiveObject().hasControls = true;
                 inst.canvas.getActiveObject().hasBorders = true;
@@ -164,50 +164,50 @@ export default (function () {
             inst.disable();
             return;
         }
-            inst.enable();
-            
-            if(inst.canvas.getActiveObject()){
-                inst.canvas.getActiveObject().hasControls = false;
-                inst.canvas.getActiveObject().hasBorders = false;
-                inst.canvas.getActiveObject().lockMovementX = true;
-                inst.canvas.getActiveObject().lockMovementY = true;
-                inst.canvas.getActiveObject().lockUniScaling = true;
-                inst.canvas.renderAll();
-            }
-            let pointer = inst.canvas.getPointer(o.e);
-            this.origX = pointer.x;
-            this.origY = pointer.y;
-            if(shape === "rect"){
-                let rect = new fabric.Rect({
-                    left: this.origX,
-                    top: this.origY,
-                    originX: 'left',
-                    originY: 'top',
-                    width: pointer.x - this.origX,
-                    height: pointer.y - this.origY,
-                    angle: angle,
-                    fill: fillCircle,
-                    transparentCorners: false,
-                    stroke: color,
-                    strokeWidth: lineWidth
-                });
-                inst.canvas.add(rect).setActiveObject(rect);
-            }
-            if(shape === "circle"){
-                let circle = new fabric.Ellipse({
-                    top: this.origY,
-                    left: this.origX,
-                    rx: 0,
-                    ry: 0,
-                    transparentCorners: false,
-                    hasBorders: true,
-                    hasControls: true,
-                });
-                inst.canvas.add(circle).setActiveObject(circle);
-            }
-        
+        inst.enable();
 
-       
+        if(inst.canvas.getActiveObject()){
+            inst.canvas.getActiveObject().hasControls = false;
+            inst.canvas.getActiveObject().hasBorders = false;
+            inst.canvas.getActiveObject().lockMovementX = true;
+            inst.canvas.getActiveObject().lockMovementY = true;
+            inst.canvas.getActiveObject().lockUniScaling = true;
+            inst.canvas.renderAll();
+        }
+        let pointer = inst.canvas.getPointer(o.e);
+        this.origX = pointer.x;
+        this.origY = pointer.y;
+        if(shape === "rect"){
+            let rect = new fabric.Rect({
+                left: this.origX,
+                top: this.origY,
+                originX: 'left',
+                originY: 'top',
+                width: pointer.x - this.origX,
+                height: pointer.y - this.origY,
+                angle: angle,
+                fill: fillCircle,
+                transparentCorners: false,
+                stroke: color,
+                strokeWidth: lineWidth
+            });
+            inst.canvas.add(rect).setActiveObject(rect);
+        }
+        if(shape === "circle"){
+            let circle = new fabric.Ellipse({
+                top: this.origY,
+                left: this.origX,
+                rx: 0,
+                ry: 0,
+                transparentCorners: false,
+                hasBorders: true,
+                hasControls: true,
+            });
+            inst.canvas.add(circle).setActiveObject(circle);
+        }
+
+
+
     };
 
     Shape.prototype.isEnable = function () {
