@@ -7,39 +7,56 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
     initialize: function(element, options) {
         options || (options = {});
         this.callSuper('initialize', element, options);
-
     },
 
     toObject: function() {
-
         return fabric.util.object.extend(this.callSuper('toObject'));
-
     },
 
     _render: function(ctx) {
-
+        this.ctx = ctx;
         this.callSuper('_render', ctx);
-        if (this.width === 0 || this.height === 0 || !this.visible) return;
-
-        ctx.save();
-
+        let p = this.calcLinePoints();
         let xDiff = this.x2 - this.x1;
         let yDiff = this.y2 - this.y1;
         let angle = Math.atan2(yDiff, xDiff);
-        ctx.translate((this.x2 - this.x1) / 2, (this.y2 - this.y1) / 2);
-        ctx.rotate(angle);
-        ctx.beginPath();
-        //move 10px in front of line to start the arrow so it does not have the square line end showing in front (0,0)
-        ctx.moveTo(10, 0);
-        ctx.lineTo(-20, 15);
-        ctx.lineTo(-20, -15);
-        ctx.closePath();
-        ctx.fillStyle = this.stroke;
-        ctx.fill();
-        ctx.restore();
+        this.drawArrow(angle, p.x2, p.y2, this.heads[0]);
+        ctx.save();
+        xDiff = -this.x2 + this.x1;
+        yDiff = -this.y2 + this.y1;
+        angle = Math.atan2(yDiff, xDiff);
+        this.drawArrow(angle, p.x1, p.y1,this.heads[1]);
+    },
 
+    drawArrow: function(angle, xPos, yPos, head) {
+        this.ctx.save();
+
+        if (head) {
+            this.ctx.translate(xPos, yPos);
+            this.ctx.rotate(angle);
+            this.ctx.beginPath();
+            // Move 5px in front of line to start the arrow so it does not have the square line end showing in front (0,0)
+            this.ctx.moveTo(10, 0);
+            this.ctx.lineTo(-20, 15);
+            this.ctx.lineTo(-20, -15);
+            this.ctx.closePath();
+        }
+
+        this.ctx.fillStyle = this.stroke;
+        this.ctx.fill();
+        this.ctx.restore();
     }
 });
+
+
+
+fabric.LineArrow.fromObject = function(object, callback) {
+    callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
+};
+
+fabric.LineArrow.async = true;
+
+
 
 fabric.LineArrow.fromObject = function(object, callback) {
     callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
@@ -110,13 +127,16 @@ export default (function () {
 
     };
     Arrow.prototype.onMouseUp = function () {
-
         let inst = this;
         if (!inst.isEnable()) {
             return;
         }
 
         if(drag){
+            this.line.set({
+                dirty: true,
+                objectCaching: true
+            });
             if(inst.canvas.getActiveObject()){
                 inst.canvas.getActiveObject().hasControls = false;
                 inst.canvas.getActiveObject().hasBorders = false;
@@ -136,7 +156,6 @@ export default (function () {
         if (!inst.isEnable()) {
             return;
         }
-
         let pointer = inst.canvas.getPointer(o.e);
         let activeObj = inst.canvas.getActiveObject();
         activeObj.set({
@@ -173,17 +192,20 @@ export default (function () {
         }
         let pointer = inst.canvas.getPointer(o.e);
         let points = [pointer.x, pointer.y, pointer.x, pointer.y];
-        let line = new fabric.LineArrow(points, {
+        this.line = new fabric.LineArrow(points, {
             strokeWidth: lineWidth,
             fill: color,
             stroke: color,
             originX: 'center',
             originY: 'center',
             hasBorders: false,
-            hasControls: false
+            hasControls: false,
+            objectCaching: false,
+            perPixelTargetFind: true,
+            heads: [1, 0]
         });
 
-        inst.canvas.add(line).setActiveObject(line);
+        inst.canvas.add(this.line).setActiveObject(this.line);
 
     };
 
