@@ -35,7 +35,6 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
             this.ctx.translate(xPos, yPos);
             this.ctx.rotate(angle);
             this.ctx.beginPath();
-            // Move 5px in front of line to start the arrow so it does not have the square line end showing in front (0,0)
             this.ctx.moveTo(10, 0);
             this.ctx.lineTo(-20, 15);
             this.ctx.lineTo(-20, -15);
