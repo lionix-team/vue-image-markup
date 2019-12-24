@@ -295,9 +295,16 @@
 
                 this.currentActiveMethod = this.drawing;
                 this.drag();
+                this.canvas.isDrawingMode = params.drawingMode;
                 this.canvas.freeDrawingBrush.color = params.stroke;
                 this.canvas.freeDrawingBrush.width = params.strokeWidth;
-                this.canvas.isDrawingMode = params.drawingMode;
+                this.canvas.freeDrawingBrush.shadow = new fabric.Shadow({
+                    blur: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    affectStroke: true,
+                    color: params.stroke,
+                });
             },
 
 
