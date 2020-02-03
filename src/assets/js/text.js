@@ -1,4 +1,5 @@
 import {fabric} from "fabric";
+import CanvasHistory from "./canvasHistory.js";
 export default (function () {
     let activeObject = false;
     let drag,textColor,textFontFamily,textFontSize,customText,color;
@@ -35,7 +36,7 @@ export default (function () {
         inst.canvas.on("mouse:up", function (o) {
             inst.onMouseUp(o);
         });
-        Text.prototype.onMouseUp = function () {
+        Text.prototype.onMouseUp = function () {          
             return Text;
         };
         Text.prototype.onMouseMove = function () {
@@ -53,9 +54,9 @@ export default (function () {
         };
         Text.prototype.onMouseDown = function (o) {
             let inst = this;
-            if(drag){
+            if(drag){   
                 inst.enable();
-                if(!inst.canvas.getActiveObject() && !activeObject){
+                if(!inst.canvas.getActiveObject() && !activeObject){                  
                     let pointer = inst.canvas.getPointer(o.e);
                     this.origX = pointer.x;
                     this.origY = pointer.y;
@@ -75,8 +76,9 @@ export default (function () {
                     text.enterEditing();
                     text.hiddenTextarea.focus();
                     inst.canvas.requestRenderAll();
+                    let saveHistory = new CanvasHistory(inst.canvas)
                 }
-                if(inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea){
+                if(inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea){                  
                     inst.canvas.getActiveObject().hasControls = false;
                     inst.canvas.getActiveObject().hasBorders = false;
                     inst.canvas.getActiveObject().lockMovementX = true;

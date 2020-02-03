@@ -4,8 +4,6 @@
 
 `vue-image-markup` will provide you to edit uploaded image easily and save it. 
 
-## Demo
-[https://image-markup.lionix-team.com](https://image-markup.lionix-team.com)
 
 ## Installation
 
@@ -27,7 +25,7 @@ Then you'll be able to use Editor component.
 
 #### Example:
 
-You must give your editor component ```ref```, which will help you to call the functions to set editor mode, clean objects or undo/redo your changes.
+You must give your editor component ```ref```,which will help you to call the functions to set editor mode,clean objects or undo/redo your changes.
 ```vue
 <Editor :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" ref="editor"/>
 
@@ -44,7 +42,7 @@ mounted() {
 `ref` with the help of ref, you will control the editor
 
 ## Function set(`type`,`params`)
-##### With the set() function you choose editor's mode, which should get two parameters `type` and `params`
+##### With the set() function you choose editor's mode,which should get two parameters `type` and `params`
 Editor have 6 modes
  - text
  - circle
@@ -52,10 +50,12 @@ Editor have 6 modes
  - selectMode
  - arrow
  - freeDrawing
+ - crop
  
-`params`  parameter must be an object which set the type and every type have its own options.
+`params`  parameter must be an object which set the type and every type have it's own options.
+
  #### Text Mode
-##### `set('text',params)` to enable text mode in editor, where `params` must be object and has its default value
+##### `set('text',params)` to enable text mode in editor,where `params` must be object and has it's default value
 ```javascript
 this.$refs.editor.set('text')
 ```
@@ -71,7 +71,7 @@ or you can customize your editor text mode styles by overwriting default values.
  this.$refs.editor.set('text',textModeOptions)
 ```
  #### Circle Mode
-##### `set('circle',params)` to enable circle mode in editor, where `params` must be object and has its default value
+##### `set('circle',params)` to enable circle mode in editor,where `params` must be object and has it's default value
 ```javascript
 this.$refs.editor.set('circle')
 ```
@@ -84,7 +84,7 @@ disableCircleEditing| `false`              | When `false`, can be painted custom
 top                | `0`                 | Top position of an object 
 left                | `0`                   |Left position of an object 
 radius            | `20`                | Radius of the circle
-strokeUniform       | `true`         | When `false`, the stroke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
+strokeUniform       | `true`         | When `false`, the stoke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
 noScaleCache        | `false`         |When `true`, cache does not get updated during scaling. The picture will get block if scaled too much and will be redrawn with correct details at the end of scaling. this setting is performance and application dependant
 
 or you can customize your editor circle mode styles by overwriting default values. 
@@ -93,7 +93,7 @@ or you can customize your editor circle mode styles by overwriting default value
  this.$refs.editor.set('circle',circleModeParams)
 ```
  #### Rectangle Mode
-##### `set('rect',params)` to enable rect mode in editor, where `params` must be object and has its default value
+##### `set('rect',params)` to enable rect mode in editor,where `params` must be object and has it's default value
 ```javascript
 this.$refs.editor.set('rect')
 ```
@@ -108,7 +108,7 @@ height               | `0`                  | if rectangle width and height is n
 top                | `0`                    | Top position of rectangle 
 left                | `0`                   |Left position of rectangle 
 opacity            | `1`                    | Opacity of rectangle
-strokeUniform       | `true`                | When `false`, the stroke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
+strokeUniform       | `true`                | When `false`, the stoke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
 noScaleCache        | `false`               |When `true`, cache does not get updated during scaling. The picture will get block if scaled too much and will be redrawn with correct details at the end of scaling. this setting is performance and application dependant
 
 or you can customize your editor rectangle mode styles by overwriting default values. 
@@ -117,13 +117,13 @@ or you can customize your editor rectangle mode styles by overwriting default va
  this.$refs.editor.set('rect',customizeRectangle)
 ```
 #### Select Mode
-##### `set('selectMode')` to enable select mode in editor. This mode disable all other types editing and enable select mode for user can move, resize or rotate selected object.This function hasn't `params` parameter
+##### `set('selectMode')` to enable select mode in editor. This mode disable all other types editing and enable select mode for user can move,resize or rotate selected object.This function hasn't `params` parameter
 
 ```javascript
 this.$refs.editor.set('selectMode')
 ```
  #### Arrow Mode
-##### `set('arrow',params)` to enable arrow mode in editor, where `params` must be object and has its default value
+##### `set('arrow',params)` to enable arrow mode in editor,where `params` must be object and has it's default value
 ```javascript
 this.$refs.editor.set('arrow')
 ```
@@ -140,7 +140,7 @@ or you can customize your editor's arrow mode styles by overwriting default valu
  this.$refs.editor.set('arrow',customizeArrow)
 ```
  #### Free Drawing Mode
-##### `set('freeDrawing',params)` to enable free drawing mode in editor, where `params` must be object and has its default value
+##### `set('freeDrawing',params)` to enable free drawing mode in editor,where `params` must be object and has it's default value
 ```javascript
 this.$refs.editor.set('freeDrawing')
 ```
@@ -154,7 +154,36 @@ or you can customize your editor's free drawing mode styles by overwriting defau
  let customizeFreeDrawing = { stroke: 'yellow',strokeWidth: "5" }
  this.$refs.editor.set('freeDrawing',customizeFreeDrawing)
 ```
+#### Crop Mode
+##### `set('crop')` to enable crop mode in editor,where `params` must be cropper's parameters and has it's default value. After calling the function, the cropper will be shown in editor.
+```javascript
+this.$refs.editor.set('crop',params)  
+```
+Object key         | Default Value | Description 
+-------------       | ------------- | -------------
+width               | `200`   | cropper's width
+height              | `200`      | cropper's height
+overlayColor        | `#000`  | color of background overlay
+overlayOpacity      | `0.3`  | opacity of background overlay
+transparentCorner     | `false`  | when set to `true`, cropper's controlling corners are rendered as transparent inside
+hasRotatingPoint     | `false`  | when set to `false`, cropper's controlling rotating point will not be visible or selectable
+hasControls     | `true`  | when set to `false`, cropper's controls are not displayed and can not be used to manipulate object
+cornerSize     | `10`  | size of cropper's controlling corners (in pixels)
+borderColor     | `#000`  | color of controlling borders of cropper (when it's active)
+cornerColor     | `#000`  | color of controlling corners of the cropper (when it's active)
+cornerStyle    | `circle`  | specify style of control, 'rect' or 'circle'
 
+or you can customize your editor crop mode styles by overwriting default values.
+```javascript
+ let cropModeOptions = { width: '50', height: '100', overlayOpacity: '0.9'}
+ this.$refs.editor.set('crop',cropModeOptions)
+```
+
+
+ If you choose the area which will be cropped,you must call `applyCropping()` function.
+```javascript
+this.$refs.editor.applyCropping()
+```
 ## Function setBackgroundImage(imageUrl)
 ##### `setBackgroundImage(imageUrl)` to set editor background image
 ```vue
@@ -163,7 +192,7 @@ data(){
         imageUrl:"example.png"
      }
 },
-mounted:{
+mounted:{    
     this.$refs.editor.setBackgroundImage(this.imageUrl);
 }
 ```
@@ -174,7 +203,7 @@ mounted:{
  this.$refs.editor.uploadImage(e)
 ```
 ## Function saveImage()
-##### `saveImage()` to save image, which returns image in base64 format.
+##### `saveImage()` to save your image,which returns image in base64 format.
 ```javascript
  this.$refs.editor.saveImage()
 ```
@@ -194,6 +223,8 @@ mounted:{
 ```javascript
  this.$refs.editor.redo()
 ```
+
+
 ## Credits
 
 - [Lilit Simonyan](https://github.com/lilitsimonyan98)

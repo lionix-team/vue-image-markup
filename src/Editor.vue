@@ -9,21 +9,23 @@
     import Shape from './assets/js/shape';
     import Text from './assets/js/text';
     import Arrow from './assets/js/arrow';
+    import CropImage from './assets/js/overlay';
+    import CanvasHistory from './assets/js/canvasHistory';  
     export default {
         name: 'Editor',
         props: ['canvasWidth', 'canvasHeight'],
-        data() {
+        data() {        
             return{
                 canvas: null,
-                pointerX:null,
-                pointerY:null,
+                pointerX: null,
+                pointerY: null,
                 createCircle: false,
                 createRect: false,
                 createArrow: false,
-                createText:false,
-                circle:null,
-                currentActiveMethod:null,
-                currentActiveTool:null,
+                createText: false,
+                circle: null,
+                currentActiveMethod: null,
+                currentActiveTool: null,
                 objects: [],
                 width: null,
                 height: null,
@@ -31,73 +33,62 @@
                 color: '#000000',
                 strokeWidth: 7,
                 fontSize: 32,
+                croppedImage: false,
+                history: [],
             }
 
         },
         mounted() {
             this.canvas = new fabric.Canvas('c');
-            this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});
+            this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});  
+            this.canvas.backgroundColor = "#fff";
+            new CanvasHistory(this.canvas)       
         },
-        methods: {
+        methods: {  
             setBackgroundImage(imageUrl){
-                let img = new Image();
-                this.toDataUrl(imageUrl, (dataUri) => {
-                    img.src = dataUri;
-                    let inst = this;
-                    if (inst.canvas.width <= img.width || inst.canvas.height <= img.height) {
-                        var canvasAspect = inst.canvas.width / inst.canvas.height;
-                        var imgAspect = img.width / img.height;
-                        if (canvasAspect >= imgAspect) {
-                            var scaleFactor = inst.canvas.width / img.width;
-                            var left = 0;
-                            var top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
+                    let img = new Image();
+                    this.toDataUrl(imageUrl, (dataUri) => {
+                        img.src = dataUri;
+                        let inst = this;
+                        if (inst.canvas.width <= img.width || inst.canvas.height <= img.height) {
+                            var canvasAspect = inst.canvas.width / inst.canvas.height;
+                            var imgAspect = img.width / img.height;
+                            if (canvasAspect >= imgAspect) {
+                                var scaleFactor = inst.canvas.width / img.width;
+                                var left = 0;
+                                var top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
 
-                        } else {
-                            var scaleFactor = inst.canvas.height / img.height;
-                            var top = 0;
-                            var left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
+                            } else {
+                                var scaleFactor = inst.canvas.height / img.height;
+                                var top = 0;
+                                var left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
+                            }
+                            img.width = inst.canvas.width;
+                            img.height = inst.canvas.height;
+
+                            inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
+                                top: top,
+                                left: left,
+                                originX: 'left',
+                                originY: 'top',
+                                scaleX: scaleFactor,
+                                scaleY: scaleFactor
+                            });
+                            inst.canvas.renderAll()
+                        }else{
+                            let center = inst.canvas.getCenter();
+                            inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
+                                top: center.top,
+                                left: center.left,
+                                originX: 'center',
+                                originY: 'center'
+                            });
+                            inst.canvas.renderAll()
                         }
-                        img.width = inst.canvas.width;
-                        img.height = inst.canvas.height;
-
-                        inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
-                            top: top,
-                            left: left,
-                            originX: 'left',
-                            originY: 'top',
-                            scaleX: scaleFactor,
-                            scaleY: scaleFactor
-                        });
-                        inst.canvas.renderAll()
-                    }else{
-                        let center = inst.canvas.getCenter();
-                        inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
-                            top: center.top,
-                            left: center.left,
-                            originX: 'center',
-                            originY: 'center'
-                        });
-                        inst.canvas.renderAll()
-                    }
-                });
-            },
-            createCORSRequest(method, url) {
-                var xhr = new XMLHttpRequest();
-                if ("withCredentials" in xhr) {
-                    // XHR for Chrome/Firefox/Opera/Safari.
-                    xhr.open(method, url, true);
-                } else if (typeof XDomainRequest != "undefined") {
-                    // XDomainRequest for IE.
-                    xhr = new XDomainRequest();
-                    xhr.open(method, url);
-                } else {
-                    // CORS not supported.
-                    xhr = null;
-                }
-                return xhr;
+                    });             
             },
             toDataUrl(url, callback) {
-                var xhr = this.createCORSRequest('GET', url);
+                var xhr = new XMLHttpRequest();
                 xhr.onload = function () {
                     var reader = new FileReader();
                     reader.onloadend = () => {
@@ -105,6 +96,7 @@
                     }
                     reader.readAsDataURL(xhr.response);
                 };
+                xhr.open('GET', url);
                 xhr.responseType = 'blob';
                 xhr.send();
             },
@@ -115,9 +107,9 @@
                 this.color = colorProperty;
                 this.set(this.currentActiveTool)
             },
-            set(type, params) {
+            set(type, params) {               
                 switch (type) {
-                    case "text":
+                    case "text":                       
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : this.color,
@@ -128,7 +120,7 @@
                         this.addText(this.params);
                         break;
 
-                    case "circle":
+                    case "circle":                      
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : 'transparent',
@@ -143,7 +135,7 @@
                         };
                         this.customCircle(type, this.params);
                         break;
-                    case "rect":
+                    case "rect":                       
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : 'transparent',
@@ -161,12 +153,12 @@
                         this.customRect(type, this.params);
                         break;
 
-                    case 'selectMode':
+                    case 'selectMode':                       
                         this.currentActiveTool = type;
                         this.drag();
                         break;
 
-                    case 'arrow':
+                    case 'arrow':                       
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : 'transparent',
@@ -177,7 +169,7 @@
                         };
                         this.drawArrow(this.params);
                         break;
-                    case 'freeDrawing':
+                    case 'freeDrawing':                        
                         this.currentActiveTool = type;
                         this.params = {
                             stroke: (params && params.stroke) ? params.stroke : this.color,
@@ -185,6 +177,26 @@
                             drawingMode: (params && params.drawingMode) ? params.drawingMode : true,
                         };
                         this.drawing(this.params);
+                        break;
+                    case 'crop':
+                        this.currentActiveTool = type;
+                        this.params = {
+                            width: (params && params.width) ? params.width : 200,
+                            height: (params && params.height) ? params.height : 200,
+                            overlayColor: (params && params.overlayColor) ? params.overlayColor : "#000",
+                            overlayOpacity: (params && params.overlayOpacity) ? params.overlayOpacity : 0.3,
+                            transparentCorner: (params && params.transparentCorner) ? params.transparentCorner : false,
+                            hasRotatingPoint: (params && params.hasRotatingPoint) ? params.hasRotatingPoint : false,
+                            hasControls: (params && params.hasControls) ? params.hasControls : true,
+                            cornerSize: (params && params.cornerSize) ? params.cornerSize : 10,
+                            borderColor: (params && params.borderColor) ? params.borderColor : "#000",
+                            cornerColor: (params && params.cornerColor) ? params.cornerColor : "#000",
+                            cornerStyle: (params && params.cornerStyle) ? params.cornerStyle : "circle",
+                        };
+                        this.currentActiveMethod = this.cropImage;            
+                        this.drag();    
+                        this.croppedImage = true;           
+                        new CropImage(this.canvas,true,false,false,this.params);
                         break;
                     default:
                 }
@@ -221,6 +233,8 @@
                                 scaleX: scaleFactor,
                                 scaleY: scaleFactor
                             });
+                            let croppedImage = { json: inst.canvas.toJSON(), croppedImage: inst.canvas.toDataURL()};
+                            let saveCanvas = new CanvasHistory(inst.canvas,croppedImage)
                             inst.canvas.renderAll();
                         }else{
                             let center = inst.canvas.getCenter();
@@ -230,6 +244,8 @@
                                 originX: 'center',
                                 originY: 'center'
                             });
+                            let croppedImage = { json: inst.canvas.toJSON(), croppedImage: inst.canvas.toDataURL()};
+                            let saveCanvas = new CanvasHistory(inst.canvas,croppedImage)
                             inst.canvas.renderAll();
                         }
                     }
@@ -244,7 +260,7 @@
                 this.canvas.isDrawingMode = false;
                 if (!params.disableCircleEditing) {
                     this.createCircle = true;
-                    new Shape(this.canvas, this.createCircle, type, params);
+                    new Shape(this.canvas, this.createCircle, type, params);               
                 } else {
                     this.drawCircle(params);
                 }
@@ -268,9 +284,17 @@
                 this.createArrow = true;
                 new Arrow(this.canvas, this.createArrow, params);
             },
+            cancelCroppingImage(){
+                this.croppedImage = false;
+                new CropImage(this.canvas,0,false,false,true)
+            },
+            applyCropping(){
+                new CropImage(this.canvas,true,true);  
+                this.cancelCroppingImage();  
+            },
             drag() {
                 this.currentActiveMethod = this.drag;
-                this.canvas.isDrawingMode = false;
+                this.canvas.isDrawingMode = false;               
                 if (this.createArrow) {
                     this.createArrow = false;
                     new Arrow(this.canvas, false);
@@ -283,7 +307,10 @@
                 if (this.createText) {
                     this.createText = false;
                     new Text(this.canvas, false);
-                }
+                }               
+                if(this.croppedImage){
+                   this.cancelCroppingImage();
+                }                
             },
             addText(params) {
                 this.currentActiveMethod = this.addText;
@@ -291,22 +318,40 @@
                 this.createText = true;
                 new Text(this.canvas, this.createText, params);
             },
-            undo() {
-                if (this.canvas._objects.length > 0) {
-                    this.objects.push(this.canvas._objects.pop());
-                    this.canvas.renderAll();
-                }
+            undo() {               
                 if (this.canvas.getActiveObject()) {
-                    this.canvas.discardActiveObject().renderAll()
-                }
+                     this.canvas.discardActiveObject().renderAll()
+                } 
+                this.history = new CanvasHistory();  
+                if (this.history.length) {
+                   
+                         this.objects.push(this.history.pop())
+                         if(this.history[this.history.length - 1] && this.history[this.history.length - 1].croppedImage){
+                           
+                            JSON.parse(JSON.stringify(this.history[this.history.length - 1]))
+                            this.canvas.loadFromJSON(this.history[this.history.length - 1].json)
+                            this.setBackgroundImage(this.history[this.history.length - 1].croppedImage)                            
+                        }
+                        else{                                                                       
+                             this.canvas.loadFromJSON(this.history[this.history.length - 1])
+                             this.canvas.renderAll();    
+                        }                      
+                    }      
             },
-            redo() {
-                if (this.objects.length > 0) {
-                    this.canvas.add(this.objects.pop());
-                }
+            redo() {    
+                    if (this.objects.length > 0) {
+                        if(this.objects[this.objects.length - 1] && this.objects[this.objects.length - 1].croppedImage){
+                            JSON.parse(JSON.stringify(this.objects[this.objects.length - 1]))
+                            this.canvas.loadFromJSON(this.objects[this.objects.length - 1].json)
+                            this.setBackgroundImage(this.objects[this.objects.length - 1].croppedImage);
+                            new CanvasHistory(false,false,this.objects.pop())       
+                        }else{
+                             this.canvas.loadFromJSON(this.objects[this.objects.length - 1])
+                             new CanvasHistory(false,false,this.objects.pop())     
+                        }
+                } 
             },
             drawing(params) {
-
                 this.currentActiveMethod = this.drawing;
                 this.drag();
                 this.canvas.isDrawingMode = params.drawingMode;
@@ -314,11 +359,16 @@
                 this.canvas.freeDrawingBrush.width = params.strokeWidth;
                 this.canvas.freeDrawingBrush.shadow = new fabric.Shadow({
                     blur: 0,
-                    offsetX: 0,
-                    offsetY: 0,
                     affectStroke: true,
                     color: params.stroke,
                 });
+                let inst = this;
+                this.canvas.on("object:added",function(){
+                    if(inst.canvas.isDrawingMode){        
+                        new CanvasHistory(inst.canvas)
+                    }
+                })
+                this.canvas.renderAll();
             },
 
 

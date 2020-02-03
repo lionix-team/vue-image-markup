@@ -1,5 +1,5 @@
-// Extended fabric line class
 import {fabric} from 'fabric';
+import CanvasHistory from "./canvasHistory";
 fabric.LineArrow = fabric.util.createClass(fabric.Line, {
 
     type: 'lineArrow',
@@ -36,8 +36,8 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
             this.ctx.rotate(angle);
             this.ctx.beginPath();
             this.ctx.moveTo(10, 0);
-            this.ctx.lineTo(-20, 15);
-            this.ctx.lineTo(-20, -15);
+            this.ctx.lineTo(-15, 15);
+            this.ctx.lineTo(-15, -15);
             this.ctx.closePath();
         }
 
@@ -52,15 +52,10 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
 fabric.LineArrow.fromObject = function(object, callback) {
     callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
 };
-
 fabric.LineArrow.async = true;
-
-
-
 fabric.LineArrow.fromObject = function(object, callback) {
     callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
 };
-
 fabric.LineArrow.async = true;
 
 export default (function () {
@@ -93,7 +88,7 @@ export default (function () {
         this.isDrawing = false;
         this.bindEvents();
         drag = draggable;
-
+        
     }
 
     Arrow.prototype.bindEvents = function () {
@@ -107,47 +102,43 @@ export default (function () {
             inst.canvas.renderAll()
         };
         inst.selectable = true;
-
-        inst.canvas.off('mouse:down');
-        inst.canvas.on('mouse:down', function (o) {
-            inst.onMouseDown(o);
-        });
-        inst.canvas.on('mouse:move', function (o) {
-            inst.onMouseMove(o);
-        });
-        inst.canvas.on('mouse:up', function (o) {
-            inst.onMouseUp(o);
-
-        });
-        inst.canvas.on('object:moving', function () {
-            inst.disable();
-        });
-
-
+        
+            inst.canvas.off('mouse:down');
+            inst.canvas.on('mouse:down', function (o) {
+                inst.onMouseDown(o);
+            });
+            inst.canvas.on('mouse:move', function (o) {
+                inst.onMouseMove(o);
+            });
+            inst.canvas.on('mouse:up', function (o) {
+                inst.onMouseUp(o);
+                
+            });
+            inst.canvas.on('object:moving', function () {
+                inst.disable();
+            });
     };
     Arrow.prototype.onMouseUp = function () {
         let inst = this;
         if (!inst.isEnable()) {
-            return;
+            return;         
         }
-
         if(drag){
             this.line.set({
                 dirty: true,
                 objectCaching: true
-            });
+            });         
             if(inst.canvas.getActiveObject()){
                 inst.canvas.getActiveObject().hasControls = false;
                 inst.canvas.getActiveObject().hasBorders = false;
                 inst.canvas.getActiveObject().lockMovementX = true;
                 inst.canvas.getActiveObject().lockMovementY = true;
                 inst.canvas.getActiveObject().lockUniScaling = true;
-            }
+            }          
             inst.canvas.renderAll();
+            let saveHistory = new CanvasHistory(inst.canvas)
         }
         inst.disable();
-
-
     };
     Arrow.prototype.onMouseMove = function (o) {
         let inst = this;
@@ -174,7 +165,7 @@ export default (function () {
                 inst.canvas.getActiveObject().hasBorders = true;
                 inst.canvas.getActiveObject().lockMovementX = false;
                 inst.canvas.getActiveObject().lockMovementY = false;
-                inst.canvas.getActiveObject().lockUniScaling = false;
+                inst.canvas.getActiveObject().lockUniScaling = false;               
                 inst.canvas.renderAll();
             }
             inst.disable();
