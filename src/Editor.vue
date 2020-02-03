@@ -9,7 +9,7 @@
     import Shape from './assets/js/shape';
     import Text from './assets/js/text';
     import Arrow from './assets/js/arrow';
-    import CropImage from './assets/js/overlay';
+    import CropImage from './assets/js/crop';
     import CanvasHistory from './assets/js/canvasHistory';  
     export default {
         name: 'Editor',
@@ -308,9 +308,8 @@
                     this.createText = false;
                     new Text(this.canvas, false);
                 }               
-                if(this.croppedImage){
-                   this.cancelCroppingImage();
-                }                
+                this.cancelCroppingImage();
+                               
             },
             addText(params) {
                 this.currentActiveMethod = this.addText;
@@ -322,6 +321,7 @@
                 if (this.canvas.getActiveObject()) {
                      this.canvas.discardActiveObject().renderAll()
                 } 
+                this.drag();  
                 this.history = new CanvasHistory();  
                 if (this.history.length) {
                    
@@ -339,6 +339,7 @@
                     }      
             },
             redo() {    
+                    this.drag();  
                     if (this.objects.length > 0) {
                         if(this.objects[this.objects.length - 1] && this.objects[this.objects.length - 1].croppedImage){
                             JSON.parse(JSON.stringify(this.objects[this.objects.length - 1]))
