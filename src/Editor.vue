@@ -121,7 +121,8 @@
                         this.addText(this.params);
                         break;
 
-                    case "circle":                      
+                    case "circle":    
+                        this.cancelCroppingImage();                  
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : 'transparent',
@@ -136,7 +137,8 @@
                         };
                         this.customCircle(type, this.params);
                         break;
-                    case "rect":                       
+                    case "rect":    
+                        this.cancelCroppingImage();                   
                         this.currentActiveTool = type;
                         this.params = {
                             fill: (params && params.fill) ? params.fill : 'transparent',
@@ -203,9 +205,11 @@
                 }
             },
             saveImage() {
+                this.cancelCroppingImage();
                 return this.canvas.toDataURL('image/jpeg', 1);
             },
             uploadImage(e) {
+                this.cancelCroppingImage();
                 let inst = this;
                 let reader = new FileReader();
                 reader.onload = function (event) {
@@ -287,7 +291,7 @@
             },
             cancelCroppingImage(){
                 this.croppedImage = false;
-                new CropImage(this.canvas,0,false,false,true)
+                new CropImage(this.canvas,false,false,true)
             },
             applyCropping(){
                 new CropImage(this.canvas,true,true);  
@@ -308,7 +312,7 @@
                 if (this.createText) {
                     this.createText = false;
                     new Text(this.canvas, false);
-                }               
+                }   
                 this.cancelCroppingImage();
                                
             },
