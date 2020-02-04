@@ -164,7 +164,7 @@ Object key         | Default Value | Description
 width               | `200`   | cropper's width
 height              | `200`      | cropper's height
 overlayColor        | `#000`  | color of background overlay
-overlayOpacity      | `0.3`  | opacity of background overlay
+overlayOpacity      | `0.7`  | opacity of background overlay
 transparentCorner     | `false`  | when set to `true`, cropper's controlling corners are rendered as transparent inside
 hasRotatingPoint     | `false`  | when set to `false`, cropper's controlling rotating point will not be visible or selectable
 hasControls     | `true`  | when set to `false`, cropper's controls are not displayed and can not be used to manipulate object

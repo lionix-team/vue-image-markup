@@ -102,6 +102,7 @@
             },
             clear() {
                 this.canvas.clear();
+                this.cancelCroppingImage()
             },
             changeColor(colorProperty) {
                 this.color = colorProperty;
@@ -184,7 +185,7 @@
                             width: (params && params.width) ? params.width : 200,
                             height: (params && params.height) ? params.height : 200,
                             overlayColor: (params && params.overlayColor) ? params.overlayColor : "#000",
-                            overlayOpacity: (params && params.overlayOpacity) ? params.overlayOpacity : 0.3,
+                            overlayOpacity: (params && params.overlayOpacity) ? params.overlayOpacity : 0.7,
                             transparentCorner: (params && params.transparentCorner) ? params.transparentCorner : false,
                             hasRotatingPoint: (params && params.hasRotatingPoint) ? params.hasRotatingPoint : false,
                             hasControls: (params && params.hasControls) ? params.hasControls : true,

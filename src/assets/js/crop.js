@@ -71,7 +71,7 @@ export default (function () {
                 left:  (oImg1.width - properties.width)/ 2,
                 top:  (oImg1.height - properties.height)/ 2,
                 width: properties.width,
-                height: properties.height,
+                height: properties.height,              
                 fill: '',
                 imageWidth: oImg1.width,
                 imageHeight: oImg1.height,
@@ -82,7 +82,24 @@ export default (function () {
                 cornerStyle: properties.cornerStyle,
                 transparentCorners: properties.transparentCorners,
                 hasRotatingPoint: properties.hasRotatingPoint,
-               
+                lockUniScaling:true,
+                noScaleCache:false,
+                strokeUniform:true,
+                clipTo: function(context) {
+                  context.translate(- this.width/2, - this.height/2);
+                  
+                  for (let x = 0; x <= this.width; x += this.width/3) {
+                      context.moveTo(x , 0);
+                      context.lineTo(x, this.height);
+                  }
+                  
+                  for (let y = 0; y <= this.height; y += this.height/3) {
+                      context.moveTo(0, y);
+                      context.lineTo(this.width, y);
+                  }
+                  context.strokeStyle = "rgba(0,0,0,0.4)";
+                  context.stroke();   
+              }    
               });
               clipRect = new fabric.Rect({
                 left: -(properties.width /2),
@@ -113,12 +130,12 @@ export default (function () {
           clipRect = new fabric.Rect({
               left: target.left - (overlay.width / 2),
               top: target.top - (overlay.height / 2),
-              width: properties.width,
-              height: properties.height,
+              width: target.width,
+              height: target.height,
               fill: '',
               scaleX: target.scaleX,
-              scaleY: target.scaleY,
-            });
+              scaleY: target.scaleY,             
+            });           
           overlay.set("clipPath",clipRect)
           inst.canvas.renderAll()       
 
@@ -128,8 +145,8 @@ export default (function () {
             clipRect = new fabric.Rect({
                 left: target.left - (overlay.width / 2),
                 top: target.top - (overlay.height / 2),
-                width: properties.width,
-                height: properties.height,
+                width: target.width,
+                height: target.height,
                 fill: '',
                 scaleX: target.scaleX,
                 scaleY: target.scaleY,
