@@ -53,10 +53,14 @@ export default (function () {
             inst.canvas.renderAll();
         };
         Text.prototype.onMouseDown = function (o) {
-            let inst = this;
+            let inst = this;           
             if(drag){   
-                inst.enable();
-                if(!inst.canvas.getActiveObject() && !activeObject){                  
+                inst.enable();   
+                if(inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text){
+                    inst.canvas.getActiveObject().selectable = false;
+                    inst.canvas.getActiveObject().evented = false;
+                }           
+                if((!inst.canvas.getActiveObject() && !activeObject) || (inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text)){                          
                     let pointer = inst.canvas.getPointer(o.e);
                     this.origX = pointer.x;
                     this.origY = pointer.y;
@@ -77,10 +81,10 @@ export default (function () {
                     text.hiddenTextarea.focus();
                     inst.canvas.requestRenderAll();
                     let saveHistory = new CanvasHistory(inst.canvas)
-                }
-                if(inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea){                  
-                    inst.canvas.getActiveObject().hasControls = false;
-                    inst.canvas.getActiveObject().hasBorders = false;
+                }              
+                if(inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea){                 
+                    inst.canvas.getActiveObject().hasControls = true;
+                    inst.canvas.getActiveObject().hasBorders = true;
                     inst.canvas.getActiveObject().lockMovementX = true;
                     inst.canvas.getActiveObject().lockMovementY = true;
                     inst.canvas.getActiveObject().lockUniScaling = true;

@@ -299,7 +299,11 @@
             },
             drag() {
                 this.currentActiveMethod = this.drag;
-                this.canvas.isDrawingMode = false;               
+                this.canvas.isDrawingMode = false;     
+                this.canvas.forEachObject(object => {
+                        object.selectable = true;
+                        object.evented = true;
+                });          
                 if (this.createArrow) {
                     this.createArrow = false;
                     new Arrow(this.canvas, false);
