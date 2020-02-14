@@ -54,14 +54,15 @@
                         if (inst.canvas.width <= img.width || inst.canvas.height <= img.height) {
                             let canvasAspect = inst.canvas.width / inst.canvas.height;
                             let imgAspect = img.width / img.height;
+                            let top,left,scaleFactor;
                              if (canvasAspect >= imgAspect) {
-                                let scaleFactor = inst.canvas.height / img.height
-                                let top = 0;
-                                let left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
+                                scaleFactor = inst.canvas.height / img.height
+                                top = 0;
+                                left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
                             } else {
-                                let scaleFactor = inst.canvas.width / img.width;
-                                let left = 0;
-                                var top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
+                                scaleFactor = inst.canvas.width / img.width;
+                                left = 0;
+                                top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
                             }
                             inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: top,
@@ -216,14 +217,15 @@
                         if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {                          
                             let canvasAspect = inst.canvas.width / inst.canvas.height;
                             let imgAspect = image.width / image.height;
+                            let top,left,scaleFactor;
                             if (canvasAspect >= imgAspect) {
-                                let scaleFactor = inst.canvas.height / image.height
-                                let top = 0;
-                                let left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
+                                scaleFactor = inst.canvas.height / image.height
+                                top = 0;
+                                left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
                             } else {
-                                let scaleFactor = inst.canvas.width / image.width;
-                                let left = 0;
-                                let top = -((image.height * scaleFactor) - inst.canvas.height) / 2;                             
+                                scaleFactor = inst.canvas.width / image.width;
+                                left = 0;
+                                top = -((image.height * scaleFactor) - inst.canvas.height) / 2;                             
                             }
                             inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: top,
