@@ -42,7 +42,7 @@
             this.canvas = new fabric.Canvas('c');
             this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});  
             this.canvas.backgroundColor = "#fff";
-            new CanvasHistory(this.canvas)       
+            new CanvasHistory(this.canvas);   
         },
         methods: {  
             setBackgroundImage(imageUrl){
@@ -50,27 +50,22 @@
                     this.toDataUrl(imageUrl, (dataUri) => {
                         img.src = dataUri;
                         let inst = this;
+                        img.onload = function () {
                         if (inst.canvas.width <= img.width || inst.canvas.height <= img.height) {
-                            var canvasAspect = inst.canvas.width / inst.canvas.height;
-                            var imgAspect = img.width / img.height;
-                            if (canvasAspect >= imgAspect) {
-                                var scaleFactor = inst.canvas.width / img.width;
-                                var left = 0;
-                                var top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
-
+                            let canvasAspect = inst.canvas.width / inst.canvas.height;
+                            let imgAspect = img.width / img.height;
+                             if (canvasAspect >= imgAspect) {
+                                let scaleFactor = inst.canvas.height / img.height
+                                let top = 0;
+                                let left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
                             } else {
-                                var scaleFactor = inst.canvas.height / img.height;
-                                var top = 0;
-                                var left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
+                                let scaleFactor = inst.canvas.width / img.width;
+                                let left = 0;
+                                var top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
                             }
-                            img.width = inst.canvas.width;
-                            img.height = inst.canvas.height;
-
                             inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: top,
                                 left: left,
-                                originX: 'left',
-                                originY: 'top',
                                 scaleX: scaleFactor,
                                 scaleY: scaleFactor
                             });
@@ -84,6 +79,7 @@
                                 originY: 'center'
                             });
                             inst.canvas.renderAll()
+                        }
                         }
                     });             
             },
@@ -216,25 +212,22 @@
                     let imgObj = new Image();
                     imgObj.src = event.target.result;
                     imgObj.onload = function () {
-                        let image = new fabric.Image(imgObj);
-                        if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {
-                            var canvasAspect = inst.canvas.width / inst.canvas.height;
-                            var imgAspect = image.width / image.height;
+                        let image = new fabric.Image(imgObj);                      
+                        if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {                          
+                            let canvasAspect = inst.canvas.width / inst.canvas.height;
+                            let imgAspect = image.width / image.height;
                             if (canvasAspect >= imgAspect) {
-                                var scaleFactor = inst.canvas.width / image.width;
-                                var left = 0;
-                                var top = -((image.height * scaleFactor) - inst.canvas.height) / 2;
-
+                                let scaleFactor = inst.canvas.height / image.height
+                                let top = 0;
+                                let left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
                             } else {
-                                var scaleFactor = inst.canvas.height / image.height;
-                                var top = 0;
-                                var left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
+                                let scaleFactor = inst.canvas.width / image.width;
+                                let left = 0;
+                                let top = -((image.height * scaleFactor) - inst.canvas.height) / 2;                             
                             }
                             inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: top,
                                 left: left,
-                                originX: 'left',
-                                originY: 'top',
                                 scaleX: scaleFactor,
                                 scaleY: scaleFactor
                             });
