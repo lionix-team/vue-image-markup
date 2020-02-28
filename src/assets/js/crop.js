@@ -11,7 +11,6 @@ export default (function () {
     let overlay = {};
     let properties
     function CropImage(canvas,draggable = false,apply = false,cancel = false,params) {
-        
         this.canvas = canvas;
         if(cancel){
             this.canvas.remove(clipRect);
@@ -25,19 +24,20 @@ export default (function () {
         drag = draggable;
         disabled = false;
         properties = params;
+        canvas.backgroundColor = "#fff";
         src = canvas.toDataURL('image/jpeg');  
         fabric.util.loadImage(src, function (img) {
             object = new fabric.Image(img);    
             object.selectable = false;   
         }) 
-      
+       
         if(drag && apply){   
             canvas.clear();
             let overlayCropped = overlay.toDataURL();     
             fabric.util.loadImage(overlayCropped, function (img) {
            
                 let clippedImage = new fabric.Image(img);    
-                clippedImage.selectable = false;   
+                clippedImage.selectable = false; 
                 canvas.setBackgroundImage(clippedImage, canvas.renderAll.bind(canvas), {
                     scaleX: canvas.width / clippedImage.width,
                     scaleY: canvas.height / clippedImage.height
@@ -47,7 +47,7 @@ export default (function () {
             drag = false; 
             apply= false;
             let croppedImage = { json: canvas.toJSON(), croppedImage: overlayCropped};
-            let saveCanvas = new CanvasHistory(this.canvas,croppedImage)
+            new CanvasHistory(this.canvas,croppedImage)
             return CropImage
         }
  
@@ -86,8 +86,7 @@ export default (function () {
                 noScaleCache:false,
                 strokeUniform:true,
                 clipTo: function(context) {
-                  context.translate(- this.width/2, - this.height/2);
-                  
+                  context.translate(- this.width/2, - this.height/2); 
                   for (let x = 0; x <= this.width; x += this.width/3) {
                       context.moveTo(x , 0);
                       context.lineTo(x, this.height);
