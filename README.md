@@ -61,10 +61,12 @@ this.$refs.editor.set('text')
 ```
 Object key         | Default Value | Description 
 -------------       | ------------- | -------------
-fill                | `black`   | color
-fontFamily          | `Arial`   | font-family
-fontSize            | `32`      | font-size
-placeholder         | `Add Text`  | default text placeholder when the text will be added
+fill                | `black`    | color
+fontFamily          | `Arial`    | font-family
+fontSize            | `32`       | font-size
+fontWeight          | `100`      | font-weight(`100`,`200`,`300`,`400`,`500`,`600`,`700`,`bold`,`normal`)
+fontStyle           | `normal`   | font-style(`normal`,`italic`,`oblique`)
+placeholder         | `Add Text` | default text placeholder when the text will be added
 or you can customize your editor text mode styles by overwriting default values.
 ```javascript
  let textModeOptions = { fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}

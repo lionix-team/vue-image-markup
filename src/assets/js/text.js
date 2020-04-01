@@ -1,28 +1,31 @@
 import {fabric} from "fabric";
 import CanvasHistory from "./canvasHistory.js";
+
 export default (function () {
     let activeObject = false;
-    let drag,textColor,textFontFamily,textFontSize,customText,color;
-    function Text(canvas,draggable = false,params) {
+    let drag, textColor, textFontFamily, textFontSize, customText, color, textFontStyle, textFontWeight;
+
+    function Text(canvas, draggable = false, params) {
         this.canvas = canvas;
-        this.className = "text";
         this.isDrawing = false;
         this.origX = 0;
         this.origY = 0;
-        this.selectedFont = 32;
         this.bindEvents();
         drag = draggable;
-        if(color && color !== params.fill){
+        if (color && color !== params.fill) {
             color = params.fill;
             return Text;
         }
-        if(params){
+        if (params) {
             textColor = params.fill;
             textFontFamily = params.fontFamily;
             textFontSize = params.fontSize;
+            textFontStyle = params.fontSize;
+            textFontWeight = params.fontWeight;
             customText = params.placeholder;
         }
-    };
+    }
+
     Text.prototype.bindEvents = function () {
         let inst = this;
         inst.selectable = true;
@@ -36,7 +39,7 @@ export default (function () {
         inst.canvas.on("mouse:up", function (o) {
             inst.onMouseUp(o);
         });
-        Text.prototype.onMouseUp = function () {          
+        Text.prototype.onMouseUp = function () {
             return Text;
         };
         Text.prototype.onMouseMove = function () {
@@ -44,34 +47,31 @@ export default (function () {
             if (!inst.isEnable()) {
                 return;
             }
-            if(inst.canvas.getActiveObject()){
-                activeObject = true;
-            }
-            else{
-                activeObject = false;
-            }
+            activeObject = inst.canvas.getActiveObject();
             inst.canvas.renderAll();
         };
         Text.prototype.onMouseDown = function (o) {
-            let inst = this;           
-            if(drag){   
-                inst.enable();   
-                if(inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text){
+            let inst = this;
+            if (drag) {
+                inst.enable();
+                if (inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text) {
                     inst.canvas.getActiveObject().selectable = false;
                     inst.canvas.getActiveObject().evented = false;
-                }           
-                if((!inst.canvas.getActiveObject() && !activeObject) || (inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text)){                          
+                }
+                if ((!inst.canvas.getActiveObject() && !activeObject) || (inst.canvas.getActiveObject() && !inst.canvas.getActiveObject().text)) {
                     let pointer = inst.canvas.getPointer(o.e);
                     this.origX = pointer.x;
                     this.origY = pointer.y;
                     let text = new fabric.IText(customText, {
-                        fill:textColor,
+                        fill: textColor,
                         fontFamily: textFontFamily,
                         left: this.origX,
                         top: this.origY,
                         fontSize: textFontSize,
-                        hasBorders:false,
-                        hasControls:false
+                        fontStyle: textFontStyle,
+                        fontWeight: textFontWeight,
+                        hasBorders: false,
+                        hasControls: false
                     });
 
                     text.selectionStart = 0;
@@ -80,9 +80,9 @@ export default (function () {
                     text.enterEditing();
                     text.hiddenTextarea.focus();
                     inst.canvas.requestRenderAll();
-                    let saveHistory = new CanvasHistory(inst.canvas)
-                }              
-                if(inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea){                 
+                    new CanvasHistory(inst.canvas)
+                }
+                if (inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea) {
                     inst.canvas.getActiveObject().hasControls = true;
                     inst.canvas.getActiveObject().hasBorders = true;
                     inst.canvas.getActiveObject().lockMovementX = true;
