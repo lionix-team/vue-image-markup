@@ -20,9 +20,19 @@ export default (function () {
             textColor = params.fill;
             textFontFamily = params.fontFamily;
             textFontSize = params.fontSize;
-            textFontStyle = params.fontSize;
+            textFontStyle = params.fontStyle;
             textFontWeight = params.fontWeight;
             customText = params.placeholder;
+            if (canvas.getActiveObject()) {
+                canvas.getActiveObject().set({
+                    fill: textColor,
+                    fontFamily: textFontFamily,
+                    fontSize: textFontSize,
+                    fontStyle: textFontStyle,
+                    fontWeight: textFontWeight
+                });
+                canvas.renderAll();
+            }
         }
     }
 
