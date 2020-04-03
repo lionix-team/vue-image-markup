@@ -23,7 +23,7 @@ export default (function () {
             textFontStyle = params.fontStyle;
             textFontWeight = params.fontWeight;
             customText = params.placeholder;
-            if (canvas.getActiveObject()) {
+            if (canvas.getActiveObject() && canvas.getActiveObject().hasOwnProperty('text')) {
                 canvas.getActiveObject().set({
                     fill: textColor,
                     fontFamily: textFontFamily,

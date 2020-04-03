@@ -1,19 +1,22 @@
 import {fabric} from 'fabric';
 import CanvasHistory from "./canvasHistory";
+
+let params;
 fabric.LineArrow = fabric.util.createClass(fabric.Line, {
 
     type: 'lineArrow',
-
-    initialize: function(element, options) {
+    initialize: function (element, options) {
+        params = options;
         options || (options = {});
         this.callSuper('initialize', element, options);
     },
 
-    toObject: function() {
+    toObject: function () {
         return fabric.util.object.extend(this.callSuper('toObject'));
     },
 
-    _render: function(ctx) {
+    _render: function (ctx) {
+        console.log('render', params);
         this.ctx = ctx;
         this.callSuper('_render', ctx);
         let p = this.calcLinePoints();
@@ -25,19 +28,19 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
         xDiff = -this.x2 + this.x1;
         yDiff = -this.y2 + this.y1;
         angle = Math.atan2(yDiff, xDiff);
-        this.drawArrow(angle, p.x1, p.y1,this.heads[1]);
+        this.drawArrow(angle, p.x1, p.y1, this.heads[1]);
     },
 
-    drawArrow: function(angle, xPos, yPos, head) {
+    drawArrow: function (angle, xPos, yPos, head) {
         this.ctx.save();
-
         if (head) {
             this.ctx.translate(xPos, yPos);
             this.ctx.rotate(angle);
             this.ctx.beginPath();
             this.ctx.moveTo(10, 0);
-            this.ctx.lineTo(-15, 15);
-            this.ctx.lineTo(-15, -15);
+            let width = params.strokeWidth < 2 ? params.strokeWidth * 6 : params.strokeWidth * 2;
+            this.ctx.lineTo(-(width - 2), width);
+            this.ctx.lineTo(-(width - 2), -width);
             this.ctx.closePath();
         }
 
@@ -48,12 +51,11 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
 });
 
 
-
-fabric.LineArrow.fromObject = function(object, callback) {
+fabric.LineArrow.fromObject = function (object, callback) {
     callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
 };
 fabric.LineArrow.async = true;
-fabric.LineArrow.fromObject = function(object, callback) {
+fabric.LineArrow.fromObject = function (object, callback) {
     callback && callback(new fabric.LineArrow([object.x1, object.y1, object.x2, object.y2], object));
 };
 fabric.LineArrow.async = true;
@@ -63,38 +65,41 @@ export default (function () {
     let color;
     let lineWidth;
     let fillArrow;
+    let strokeDashArray;
     let properties;
-    function Arrow(canvas,draggable = false,params) {
 
-        if(!draggable){
+    function Arrow(canvas, draggable = false, params) {
+
+        if (!draggable) {
             drag = false;
             return Arrow;
         }
 
-        if(color && color !== params.stroke){
+        if (color && color !== params.stroke) {
             color = params.stroke;
-            new Arrow(canvas,draggable,params)
+            new Arrow(canvas, draggable, params)
             return Arrow;
         }
 
         properties = params;
-        if(properties){
+        if (properties) {
             fillArrow = params.fill;
             color = params.stroke;
             lineWidth = params.strokeWidth;
+            strokeDashArray = params.strokeDashArray;
         }
         this.canvas = canvas;
         this.className = 'Arrow';
         this.isDrawing = false;
         this.bindEvents();
         drag = draggable;
-        
+
     }
 
     Arrow.prototype.bindEvents = function () {
         let inst = this;
-        document.onkeydown=(e)=>{
-            if(e.which === 46 || e.keycode === 46){
+        document.onkeydown = (e) => {
+            if (e.which === 46 || e.keycode === 46) {
                 inst.canvas.getActiveObjects().forEach((obj) => {
                     inst.canvas.remove(obj)
                 });
@@ -102,39 +107,39 @@ export default (function () {
             inst.canvas.renderAll()
         };
         inst.selectable = true;
-        
-            inst.canvas.off('mouse:down');
-            inst.canvas.on('mouse:down', function (o) {
-                inst.onMouseDown(o);
-            });
-            inst.canvas.on('mouse:move', function (o) {
-                inst.onMouseMove(o);
-            });
-            inst.canvas.on('mouse:up', function (o) {
-                inst.onMouseUp(o);
-                
-            });
-            inst.canvas.on('object:moving', function () {
-                inst.disable();
-            });
+
+        inst.canvas.off('mouse:down');
+        inst.canvas.on('mouse:down', function (o) {
+            inst.onMouseDown(o);
+        });
+        inst.canvas.on('mouse:move', function (o) {
+            inst.onMouseMove(o);
+        });
+        inst.canvas.on('mouse:up', function (o) {
+            inst.onMouseUp(o);
+
+        });
+        inst.canvas.on('object:moving', function () {
+            inst.disable();
+        });
     };
     Arrow.prototype.onMouseUp = function () {
         let inst = this;
         if (!inst.isEnable()) {
-            return;         
+            return;
         }
-        if(drag){
+        if (drag) {
             this.line.set({
                 dirty: true,
                 objectCaching: true
-            });         
-            if(inst.canvas.getActiveObject()){
+            });
+            if (inst.canvas.getActiveObject()) {
                 inst.canvas.getActiveObject().hasControls = false;
                 inst.canvas.getActiveObject().hasBorders = false;
                 inst.canvas.getActiveObject().lockMovementX = true;
                 inst.canvas.getActiveObject().lockMovementY = true;
                 inst.canvas.getActiveObject().lockUniScaling = true;
-            }          
+            }
             inst.canvas.renderAll();
             let saveHistory = new CanvasHistory(inst.canvas)
         }
@@ -159,20 +164,20 @@ export default (function () {
     Arrow.prototype.onMouseDown = function (o) {
 
         let inst = this;
-        if(!drag){
-            if( inst.canvas.getActiveObject()){
+        if (!drag) {
+            if (inst.canvas.getActiveObject()) {
                 inst.canvas.getActiveObject().hasControls = true;
                 inst.canvas.getActiveObject().hasBorders = true;
                 inst.canvas.getActiveObject().lockMovementX = false;
                 inst.canvas.getActiveObject().lockMovementY = false;
-                inst.canvas.getActiveObject().lockUniScaling = false;               
+                inst.canvas.getActiveObject().lockUniScaling = false;
                 inst.canvas.renderAll();
             }
             inst.disable();
             return;
         }
         inst.enable();
-        if(inst.canvas.getActiveObject()){
+        if (inst.canvas.getActiveObject()) {
             inst.canvas.getActiveObject().hasControls = false;
             inst.canvas.getActiveObject().hasBorders = false;
             inst.canvas.getActiveObject().lockMovementX = true;
@@ -184,6 +189,7 @@ export default (function () {
         let points = [pointer.x, pointer.y, pointer.x, pointer.y];
         this.line = new fabric.LineArrow(points, {
             strokeWidth: lineWidth,
+            strokeDashArray: strokeDashArray,
             fill: color,
             stroke: color,
             originX: 'center',
@@ -192,9 +198,8 @@ export default (function () {
             hasControls: false,
             objectCaching: false,
             perPixelTargetFind: true,
-            heads: [1, 0]
+            heads: [1, 0],
         });
-
         inst.canvas.add(this.line).setActiveObject(this.line);
 
     };

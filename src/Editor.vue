@@ -131,6 +131,7 @@
                             radius: (params && params.radius) ? params.radius : 20,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
                         };
                         this.customCircle(type, this.params);
                         break;
@@ -149,10 +150,50 @@
                             opacity: (params && params.opacity) ? params.opacity : 1,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0
                         };
                         this.customRect(type, this.params);
                         break;
-
+                    case "comment":
+                        this.cancelCroppingImage();
+                        this.currentActiveTool = type;
+                        this.params = {
+                            fill: (params && params.fill) ? params.fill : 'transparent',
+                            stroke: (params && params.stroke) ? params.stroke : this.color,
+                            strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                            angle: (params && params.angle) ? params.angle : 0,
+                            width: (params && params.width) ? params.width : null,
+                            height: (params && params.height) ? params.height : null,
+                            top: (params && params.top) ? params.top : 0,
+                            left: (params && params.left) ? params.left : 0,
+                            opacity: (params && params.opacity) ? params.opacity : 1,
+                            strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                            noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0
+                        };
+                        this.customRect(type, this.params);
+                        break;
+                    case "line":
+                        this.cancelCroppingImage();
+                        this.currentActiveTool = type;
+                        this.params = {
+                            fill: (params && params.fill) ? params.fill : 'transparent',
+                            stroke: (params && params.stroke) ? params.stroke : this.color,
+                            strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
+                            angle: (params && params.angle) ? params.angle : 0,
+                            width: (params && params.width) ? params.width : null,
+                            height: (params && params.height) ? params.height : null,
+                            top: (params && params.top) ? params.top : 0,
+                            left: (params && params.left) ? params.left : 0,
+                            opacity: (params && params.opacity) ? params.opacity : 1,
+                            strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                            noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
+                        };
+                        this.customRect(type, this.params);
+                        break;
                     case 'selectMode':
                         this.currentActiveTool = type;
                         this.drag();
@@ -166,6 +207,7 @@
                             strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
                         };
                         this.drawArrow(this.params);
                         break;
