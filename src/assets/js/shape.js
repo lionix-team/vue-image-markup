@@ -115,7 +115,6 @@ export default (function () {
         let activeObj;
         if (inst.canvas.getActiveObject()) {
             activeObj = inst.canvas.getActiveObject();
-            console.log(color, fillCircle);
             activeObj.stroke = color;
             activeObj.strokeWidth = lineWidth;
             activeObj.fill = fillCircle;
@@ -187,7 +186,6 @@ export default (function () {
         let pointer = inst.canvas.getPointer(o.e);
         this.origX = pointer.x;
         this.origY = pointer.y;
-        console.log('dash array', borderRadius);
         if (shape === "rect") {
             let rect = new fabric.Rect({
                 left: this.origX,

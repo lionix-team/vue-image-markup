@@ -16,7 +16,6 @@ fabric.LineArrow = fabric.util.createClass(fabric.Line, {
     },
 
     _render: function (ctx) {
-        console.log('render', params);
         this.ctx = ctx;
         this.callSuper('_render', ctx);
         let p = this.calcLinePoints();
