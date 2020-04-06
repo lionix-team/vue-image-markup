@@ -121,15 +121,17 @@ export default (function () {
             activeObj.noScaleCache = false;
             activeObj.strokeUniform = true;
         }
-        if (this.origX > pointer.x) {
-            activeObj.set({
-                left: Math.abs(pointer.x)
-            });
-        }
-        if (this.origY > pointer.y) {
-            activeObj.set({
-                top: Math.abs(pointer.y)
-            });
+        if (shape !== "comment") {
+            if (this.origX > pointer.x) {
+                activeObj.set({
+                    left: Math.abs(pointer.x)
+                });
+            }
+            if (this.origY > pointer.y) {
+                activeObj.set({
+                    top: Math.abs(pointer.y)
+                });
+            }
         }
         if (shape == "rect") {
             activeObj.set({
@@ -139,8 +141,8 @@ export default (function () {
         }
         if (shape == "comment") {
             activeObj.set({
-                scaleX: Math.abs(this.origY - pointer.y) / 50,
-                scaleY: Math.abs(this.origY - pointer.y) / 50
+                scaleX: Math.abs(this.origY - pointer.y) / 65,
+                scaleY: Math.abs(this.origY - pointer.y) / 65
             });
         }
         if (shape == "line") {
