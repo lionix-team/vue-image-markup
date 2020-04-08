@@ -37,6 +37,7 @@
                 fontSize: 32,
                 croppedImage: false,
                 history: [],
+
             }
 
         },
@@ -398,6 +399,7 @@
                 }
             },
             drawing(params) {
+                this.canvas.__eventListeners['object:added'] = null;
                 this.currentActiveMethod = this.drawing;
                 this.drag();
                 this.canvas.isDrawingMode = params.drawingMode;
@@ -416,8 +418,6 @@
                 });
                 this.canvas.renderAll();
             },
-
-
             drawRect(params) {
                 this.drag();
                 this.canvas.discardActiveObject();
