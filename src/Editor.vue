@@ -105,7 +105,7 @@
                 this.cancelCroppingImage()
             },
             set(type, params) {
-                this.canvas.off("mouse:down");
+                this.canvas.off('mouse:down');
                 switch (type) {
                     case "text":
                         this.currentActiveTool = type;
@@ -245,9 +245,12 @@
                     case 'eraser':
                         this.currentActiveTool = type;
                         let inst = this;
+                        this.canvas.isDrawingMode = false;
+                        inst.selectable = true;
                         this.canvas.on("mouse:down", function () {
                             if (inst.canvas.getActiveObject()) {
-                                inst.canvas.remove(inst.canvas.getActiveObject())
+                                inst.canvas.remove(inst.canvas.getActiveObject());
+                                new CanvasHistory(inst.canvas)
                             }
                         });
                         break;
@@ -467,6 +470,3 @@
 
     }
 </script>
-<style>
-
-</style>
