@@ -108,7 +108,7 @@ export default (function () {
                             context.moveTo(0, y);
                             context.lineTo(this.width, y);
                         }
-                        context.strokeStyle = properties.strokeColor;
+                        context.strokeStyle = properties && properties.strokeColor ? properties.strokeColor : '#000';
                         context.stroke();
                     }
                 });
