@@ -12,16 +12,21 @@ export default (function () {
         }
         if(canvas){
             this.canvas = canvas; 
-            let currentJson = this.canvas.toJSON();  
-            currentJson.objects.forEach(function(object) {
+            let currentCanvas = this.canvas.toJSON();  
+            currentCanvas.objects.forEach(function(object) {
                 if(object.type == "lineArrow"){
                     object.heads = [1, 0];
                 }
             });
-            if(cropObject){    
-                delete cropObject.json.backgroundImage;
-                history.push(cropObject) 
-                return history;
+            let currentJson = {};  
+            
+            if(cropObject){
+                currentJson = Object.assign(currentJson,cropObject);
+                currentJson.json.objects.forEach(function(object) {
+                    if(object.type == "lineArrow"){
+                        object.heads = [1, 0];
+                    }
+                });
             }
             history.push(currentJson);   
         }

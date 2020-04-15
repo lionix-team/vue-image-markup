@@ -90,7 +90,9 @@ export default (function () {
                     text.enterEditing();
                     text.hiddenTextarea.focus();
                     inst.canvas.requestRenderAll();
-                    new CanvasHistory(inst.canvas)
+                    let canvasProperties = {width:inst.canvas.width,height:inst.canvas.height}
+                    let currentCanvas = { json: inst.canvas.toJSON(),canvas: canvasProperties};
+                    new CanvasHistory(inst.canvas,currentCanvas)
                 }
                 if (inst.canvas.getActiveObject() && activeObject && inst.canvas.getActiveObject().hiddenTextarea) {
                     inst.canvas.getActiveObject().hasControls = true;

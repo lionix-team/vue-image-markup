@@ -101,7 +101,9 @@ export default (function () {
             }
             inst.canvas.renderAll();
         }
-        let saveHistory = new CanvasHistory(inst.canvas)
+        let canvasProperties = {width:inst.canvas.width,height:inst.canvas.height}
+        let currentCanvas = { json: inst.canvas.toJSON(),canvas: canvasProperties};
+        new CanvasHistory(inst.canvas,currentCanvas)
         inst.disable();
 
     };

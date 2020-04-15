@@ -33,21 +33,24 @@ export default (function () {
        
         if(drag && apply){   
             canvas.clear();
-            let overlayCropped = overlay.toDataURL();     
+            let overlayCropped = overlay.toDataURL();  
             fabric.util.loadImage(overlayCropped, function (img) {
            
                 let clippedImage = new fabric.Image(img);    
-                clippedImage.selectable = false; 
-                canvas.setBackgroundImage(clippedImage, canvas.renderAll.bind(canvas), {
-                    scaleX: canvas.width / clippedImage.width,
-                    scaleY: canvas.height / clippedImage.height
-                });                   
+                    canvas.setBackgroundImage(clippedImage, canvas.renderAll.bind(canvas), {
+                        top: -(clipRect.top),
+                        left: -(clipRect.left),
+                        originX: 'center',
+                        originY: 'center',
+                    });
+                    canvas.setDimensions({width: clipRect.width * clipRect.scaleX, height: clipRect.height * clipRect.scaleY});                 
              }) 
 
             drag = false; 
             apply= false;
-            let croppedImage = { json: canvas.toJSON(), croppedImage: overlayCropped};
-            new CanvasHistory(this.canvas,croppedImage)
+            let canvasProperties = {width: clipRect.width * clipRect.scaleX, height: clipRect.height * clipRect.scaleY}
+            let croppedImage = { json: this.canvas.toJSON(), croppedImage: overlayCropped,canvas: canvasProperties,imagePosition:clipRect};
+            new CanvasHistory(this.canvas,croppedImage);
             return CropImage
         }
  
