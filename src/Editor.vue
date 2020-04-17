@@ -471,7 +471,9 @@
                 }
             },
             drawing(params) {
-                this.canvas.__eventListeners['object:added'] = null;
+                if (this.canvas.__eventListeners) {
+                    this.canvas.__eventListeners['object:added'] = null;
+                }
                 this.currentActiveMethod = this.drawing;
                 this.drag();
                 this.canvas.isDrawingMode = params.drawingMode;
