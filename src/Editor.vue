@@ -50,7 +50,7 @@
             new CanvasHistory(this.canvas, currentCanvas);
         },
         methods: {
-            setBackgroundImage(imageUrl) {
+            setBackgroundImage(imageUrl, backgroundColor = "#fff") {
                 let img = new Image();
                 this.toDataUrl(imageUrl, (dataUri) => {
                     img.src = dataUri;
@@ -86,6 +86,8 @@
                             });
                             inst.canvas.renderAll()
                         }
+                        inst.canvas.backgroundColor = backgroundColor;
+                        inst.canvas.renderAll()
                     }
                 });
             },
