@@ -157,7 +157,7 @@
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
                             strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
-                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0
+                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0,
                         };
                         this.customRect(type, this.params);
                         break;
@@ -241,6 +241,9 @@
                             cornerColor: (params && params.cornerColor) ? params.cornerColor : "#000",
                             cornerStyle: (params && params.cornerStyle) ? params.cornerStyle : "circle",
                             strokeColor: (params && params.strokeColor) ? params.strokeColor : "#000",
+                            lockUniScaling: (params && params.lockUniScaling) ? params.lockUniScaling : true,
+                            noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
+                            strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                         };
                         this.currentActiveMethod = this.cropImage;
                         this.drag();
