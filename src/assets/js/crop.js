@@ -9,7 +9,8 @@ export default (function () {
     let drag;
     let clipRect,rect,rectRed;
     let overlay = {};
-    let properties
+    let properties;
+    let cropperWidth,cropperHeight;
     function CropImage(canvas,draggable = false,apply = false,cancel = false,params) {
         this.canvas = canvas;
         if(cancel){
@@ -53,7 +54,14 @@ export default (function () {
             new CanvasHistory(this.canvas,croppedImage);
             return CropImage
         }
- 
+        if(canvas.width <= properties.width || canvas.height <= properties.height){
+            cropperWidth =  canvas.width - 50;
+            cropperHeight = canvas.height - 50;
+        }
+        else{
+            cropperWidth =  properties.width;
+            cropperHeight = properties.height;
+        }
         this.bindEvents();  
         this.canvas.selectable = false;    
         this.canvas.renderAll();
@@ -73,8 +81,8 @@ export default (function () {
                rectRed = new fabric.Rect({
                 left:  (oImg1.width - properties.width)/ 2,
                 top:  (oImg1.height - properties.height)/ 2,
-                width: properties.width,
-                height: properties.height,              
+                width: cropperWidth,
+                height: cropperHeight,              
                 fill: '',
                 imageWidth: oImg1.width,
                 imageHeight: oImg1.height,
@@ -104,10 +112,10 @@ export default (function () {
               }    
               });
               clipRect = new fabric.Rect({
-                left: -(properties.width /2),
-                top: -(properties.height/2),
-                width: properties.width,
-                height: properties.height,
+                left: -(cropperWidth /2),
+                top: -(cropperHeight/2),
+                width: cropperWidth,
+                height: cropperHeight,
                 fill: '',
                 selectable:false,
               });
