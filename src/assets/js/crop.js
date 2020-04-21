@@ -102,9 +102,9 @@ export default (function () {
                     cornerStyle: properties.cornerStyle,
                     transparentCorners: properties.transparentCorners,
                     hasRotatingPoint: properties.hasRotatingPoint,
-                    lockUniScaling: properties.lockUniScaling,
-                    noScaleCache: properties.noScaleCache,
-                    strokeUniform: properties.strokeUniform,
+                    lockUniScaling: JSON.parse(properties.lockUniScaling),
+                    noScaleCache: JSON.parse(properties.noScaleCache),
+                    strokeUniform: JSON.parse(properties.strokeUniform),
                     clipTo: function (context) {
                         context.translate(-this.width / 2, -this.height / 2);
                         for (let x = 0; x <= this.width; x += this.width / 3) {
