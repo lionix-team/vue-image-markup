@@ -104,7 +104,7 @@ export default (function () {
                     hasRotatingPoint: properties.hasRotatingPoint,
                     lockUniScaling: properties.lockUniScaling,
                     noScaleCache: properties.noScaleCache,
-                    strokeUniform: properties/strokeUniform,
+                    strokeUniform: properties.strokeUniform,
                     clipTo: function (context) {
                         context.translate(-this.width / 2, -this.height / 2);
                         for (let x = 0; x <= this.width; x += this.width / 3) {
