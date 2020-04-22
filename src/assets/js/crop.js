@@ -88,8 +88,8 @@ export default (function () {
             inst.canvas.add(rect);
             fabric.Image.fromURL(src, function (oImg1) {
                 rectRed = new fabric.Rect({
-                    left: (oImg1.width - properties.width) / 2,
-                    top: (oImg1.height - properties.height) / 2,
+                    left: (oImg1.width - cropperWidth) / 2,
+                    top: (oImg1.height - cropperHeight) / 2,
                     width: cropperWidth,
                     height: cropperHeight,
                     fill: '',
@@ -104,7 +104,7 @@ export default (function () {
                     hasRotatingPoint: properties.hasRotatingPoint,
                     lockUniScaling: JSON.parse(properties.lockUniScaling),
                     noScaleCache: JSON.parse(properties.noScaleCache),
-                    strokeUniform: JSON.parse(properties.strokeUniform),
+                    strokeUniform: JSON.parse( properties.strokeUniform),
                     clipTo: function (context) {
                         context.translate(-this.width / 2, -this.height / 2);
                         for (let x = 0; x <= this.width; x += this.width / 3) {
