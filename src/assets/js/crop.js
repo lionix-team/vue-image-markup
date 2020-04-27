@@ -73,6 +73,7 @@ export default (function () {
         }
         this.bindEvents();
         this.canvas.selectable = false;
+        this.canvas.uniScaleTransform = true;
         this.canvas.renderAll();
         let inst = this;
         new fabric.Image.fromURL(src, function (oImg) {
@@ -105,6 +106,7 @@ export default (function () {
                     lockUniScaling: JSON.parse(properties.lockUniScaling),
                     noScaleCache: JSON.parse(properties.noScaleCache),
                     strokeUniform: JSON.parse( properties.strokeUniform),
+                    
                     clipTo: function (context) {
                         context.translate(-this.width / 2, -this.height / 2);
                         for (let x = 0; x <= this.width; x += this.width / 3) {
@@ -120,6 +122,16 @@ export default (function () {
                         context.stroke();
                     }
                 });
+                rectRed.setControlsVisibility({
+                    tl:true, 
+                    mt:false,  
+                    tr:true,  
+                    ml:false,  
+                    mr:false, 
+                    bl:true,  
+                    mb:false, 
+                    br:true  
+                   }),
                 clipRect = new fabric.Rect({
                     left: -(cropperWidth / 2),
                     top: -(cropperHeight / 2),
