@@ -244,6 +244,7 @@
                             lockUniScaling: (params && params.lockUniScaling) ? params.lockUniScaling : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
+                            cropperTopPosition: (params && params.cropperTopPosition) ? params.cropperTopPosition : false,
                         };
                         this.currentActiveMethod = this.cropImage;
                         this.drag();

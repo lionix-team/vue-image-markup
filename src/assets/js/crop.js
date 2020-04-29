@@ -90,7 +90,7 @@ export default (function () {
             fabric.Image.fromURL(src, function (oImg1) {
                 rectRed = new fabric.Rect({
                     left: (oImg1.width - cropperWidth) / 2,
-                    top: (oImg1.height - cropperHeight) / 2,
+                    top: properties.cropperTopPosition ? properties.cropperTopPosition : (oImg1.height - cropperHeight) / 2,
                     width: cropperWidth,
                     height: cropperHeight,
                     fill: '',
@@ -134,7 +134,7 @@ export default (function () {
                    }),
                 clipRect = new fabric.Rect({
                     left: -(cropperWidth / 2),
-                    top: -(cropperHeight / 2),
+                    top: properties.cropperTopPosition ? -cropperHeight  - properties.cropperTopPosition : - (cropperHeight / 2),
                     width: cropperWidth,
                     height: cropperHeight,
                     fill: '',
