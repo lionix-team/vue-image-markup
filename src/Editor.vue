@@ -56,38 +56,51 @@
                     img.src = dataUri;
                     let inst = this;
                     img.onload = function () {
-                        if (inst.canvas.width <= img.width || inst.canvas.height <= img.height) {
+                        let image = new fabric.Image(img);
+                        if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {
                             let canvasAspect = inst.canvas.width / inst.canvas.height;
-                            let imgAspect = img.width / img.height;
+                            let imgAspect = image.width / image.height;
                             let top, left, scaleFactor;
                             if (canvasAspect >= imgAspect) {
-                                scaleFactor = inst.canvas.height / img.height
+                                scaleFactor = inst.canvas.height / image.height
                                 top = 0;
-                                left = -((img.width * scaleFactor) - inst.canvas.width) / 2;
+                                left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
                             } else {
-                                scaleFactor = inst.canvas.width / img.width;
+                                scaleFactor = inst.canvas.width / image.width;
                                 left = 0;
-                                top = -((img.height * scaleFactor) - inst.canvas.height) / 2;
+                                top = -((image.height * scaleFactor) - inst.canvas.height) / 2;
                             }
-                            inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
+                            inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: top,
                                 left: left,
                                 scaleX: scaleFactor,
                                 scaleY: scaleFactor
                             });
-                            inst.canvas.renderAll()
+                            let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                            let currentCanvas = {
+                                json: inst.canvas.toJSON(),
+                                croppedImage: inst.canvas.toDataURL(),
+                                canvas: canvasProperties
+                            };
+                            new CanvasHistory(inst.canvas, currentCanvas)
+                            inst.canvas.renderAll();
                         } else {
                             let center = inst.canvas.getCenter();
-                            inst.canvas.setBackgroundImage(dataUri, inst.canvas.renderAll.bind(inst.canvas), {
+                            inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
                                 top: center.top,
                                 left: center.left,
                                 originX: 'center',
                                 originY: 'center'
                             });
-                            inst.canvas.renderAll()
+                            let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                            let currentCanvas = {
+                                json: inst.canvas.toJSON(),
+                                croppedImage: inst.canvas.toDataURL(),
+                                canvas: canvasProperties
+                            };
+                            new CanvasHistory(inst.canvas, currentCanvas)
+                            inst.canvas.renderAll();
                         }
-                        inst.canvas.backgroundColor = backgroundColor;
-                        inst.canvas.renderAll()
                     }
                 });
             },
@@ -243,8 +256,7 @@
                             strokeColor: (params && params.strokeColor) ? params.strokeColor : "#000",
                             lockUniScaling: (params && params.lockUniScaling) ? params.lockUniScaling : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
-                            strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
-                            cropperTopPosition: (params && params.cropperTopPosition) ? params.cropperTopPosition : false,
+                            strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true
                         };
                         this.currentActiveMethod = this.cropImage;
                         this.drag();
