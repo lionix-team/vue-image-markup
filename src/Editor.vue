@@ -57,51 +57,21 @@
                     let inst = this;
                     img.onload = function () {
                         let image = new fabric.Image(img);
-                        if (inst.canvas.width <= image.width || inst.canvas.height <= image.height) {
-                            let canvasAspect = inst.canvas.width / inst.canvas.height;
-                            let imgAspect = image.width / image.height;
-                            let top, left, scaleFactor;
-                            if (canvasAspect >= imgAspect) {
-                                scaleFactor = inst.canvas.height / image.height
-                                top = 0;
-                                left = -((image.width * scaleFactor) - inst.canvas.width) / 2;
-                            } else {
-                                scaleFactor = inst.canvas.width / image.width;
-                                left = 0;
-                                top = -((image.height * scaleFactor) - inst.canvas.height) / 2;
-                            }
-                            inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
-                                top: top,
-                                left: left,
-                                scaleX: scaleFactor,
-                                scaleY: scaleFactor
-                            });
-                            let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
-                            let currentCanvas = {
-                                json: inst.canvas.toJSON(),
-                                croppedImage: inst.canvas.toDataURL(),
-                                canvas: canvasProperties
-                            };
-                            new CanvasHistory(inst.canvas, currentCanvas)
-                            inst.canvas.renderAll();
-                        } else {
-                            let center = inst.canvas.getCenter();
-                            inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
-                                top: center.top,
-                                left: center.left,
-                                originX: 'center',
-                                originY: 'center'
-                            });
-                            let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
-                            let currentCanvas = {
-                                json: inst.canvas.toJSON(),
-                                croppedImage: inst.canvas.toDataURL(),
-                                canvas: canvasProperties
-                            };
-                            new CanvasHistory(inst.canvas, currentCanvas)
-                            inst.canvas.renderAll();
-                        }
+                        image.scaleToWidth(inst.canvasWidth);
+                        image.scaleToHeight(inst.canvasHeight);
+                        inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
+                            top: 0,
+                            left: 0,
+                        });
+                        let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
+                        let currentCanvas = {
+                            json: inst.canvas.toJSON(),
+                            canvas: canvasProperties
+                        };
+                        new CanvasHistory(inst.canvas, currentCanvas)
+                        inst.canvas.renderAll();
                     }
+
                 });
             },
             toDataUrl(url, callback) {
@@ -427,7 +397,7 @@
                                     height: lastCanvasProperties.height
                                 })
                                 JSON.parse(JSON.stringify(this.history[this.history.length - 1]))
-                                this.canvas.loadFromJSON(this.history[this.history.length - 1].json)   
+                                this.canvas.loadFromJSON(this.history[this.history.length - 1].json)
                             }
                             else{
                                 let canvasObjects = this.history[this.history.length - 1].json.objects;
@@ -436,7 +406,7 @@
                                 }
                             }
                         }
-                       
+
                         if (this.history[this.history.length - 1].croppedImage && this.history[this.history.length - 1].imagePosition) {
 
                             let inst = this;
@@ -472,8 +442,8 @@
                             this.canvas.loadFromJSON(this.objects[this.objects.length - 1].json)
                         }
                         else if(this.objects[this.objects.length - 1].type){
-                            this.canvas.add(this.objects.pop())                  
-                        }                       
+                            this.canvas.add(this.objects.pop())
+                        }
                         if (this.objects[this.objects.length - 1].imagePosition && this.objects[this.objects.length - 1].croppedImage) {
                             let currentProperties;
                             currentProperties = this.objects[this.objects.length - 1].imagePosition;
@@ -489,7 +459,7 @@
                                 inst.canvas.setBackgroundImage(img, inst.canvas.renderAll.bind(inst.canvas));
                             });
                         }
-                    }                
+                    }
                     new CanvasHistory(false, false, this.objects.pop())
                 }
             },
@@ -556,3 +526,8 @@
 
     }
 </script>
+<style scoped>
+    .upper-canvas{
+        z-index: 1;
+    }
+</style>

@@ -1,6 +1,5 @@
 import {fabric} from "fabric";
 import CanvasHistory from "./canvasHistory";
-
 export default (function () {
 
     let disabled = false;
@@ -18,6 +17,12 @@ export default (function () {
             this.canvas.remove(clipRect);
             this.canvas.remove(rect);
             this.canvas.remove(rectRed);
+            let inst = this;
+            this.canvas.getObjects().forEach(function(object) {
+                if(object.id === 'clonedCanvasImage') {
+                    inst.canvas.remove(object);
+                }
+            })
         }
         if (!draggable) {
             drag = false;
@@ -27,15 +32,11 @@ export default (function () {
         disabled = false;
         properties = params;
         canvas.backgroundColor = "#fff";
-        src = canvas.toDataURL('image/jpeg');
-        fabric.util.loadImage(src, function (img) {
-            object = new fabric.Image(img);
-            object.selectable = false;
-        })
+        src = canvas.toDataURL('image/jpeg',1);
 
         if (drag && apply) {
             canvas.clear();
-            let overlayCropped = overlay.toDataURL();
+            let overlayCropped = overlay.toDataURL('image/jpeg',1);
             fabric.util.loadImage(overlayCropped, function (img) {
 
                 let clippedImage = new fabric.Image(img);
@@ -88,6 +89,7 @@ export default (function () {
             });
             inst.canvas.add(rect);
             fabric.Image.fromURL(src, function (oImg1) {
+                oImg1.id = 'clonedCanvasImage';
                 rectRed = new fabric.Rect({
                     left: (oImg1.width - cropperWidth) / 2,
                     top:  (oImg1.height - cropperHeight) / 2,
@@ -106,7 +108,7 @@ export default (function () {
                     lockUniScaling: JSON.parse(properties.lockUniScaling),
                     noScaleCache: JSON.parse(properties.noScaleCache),
                     strokeUniform: JSON.parse( properties.strokeUniform),
-                    
+
                     clipTo: function (context) {
                         context.translate(-this.width / 2, -this.height / 2);
                         for (let x = 0; x <= this.width; x += this.width / 3) {
@@ -123,23 +125,23 @@ export default (function () {
                     }
                 });
                 rectRed.setControlsVisibility({
-                    tl:true, 
-                    mt:false,  
-                    tr:true,  
-                    ml:false,  
-                    mr:false, 
-                    bl:true,  
-                    mb:false, 
-                    br:true  
-                   }),
-                clipRect = new fabric.Rect({
-                    left: -(cropperWidth / 2),
-                    top: - (cropperHeight / 2),
-                    width: cropperWidth,
-                    height: cropperHeight,
-                    fill: '',
-                    selectable: false,
-                });
+                    tl:true,
+                    mt:false,
+                    tr:true,
+                    ml:false,
+                    mr:false,
+                    bl:true,
+                    mb:false,
+                    br:true
+                }),
+                    clipRect = new fabric.Rect({
+                        left: -(cropperWidth / 2),
+                        top: - (cropperHeight / 2),
+                        width: cropperWidth,
+                        height: cropperHeight,
+                        fill: '',
+                        selectable: false,
+                    });
                 oImg1.set({clipPath: clipRect, selectable: false})
 
                 inst.canvas.add(oImg1);
