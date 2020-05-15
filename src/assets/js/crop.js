@@ -3,23 +3,24 @@ import CanvasHistory from "./canvasHistory";
 export default (function () {
 
     let disabled = false;
-    let object;
+    let object, bgImage;
     let src;
     let drag;
     let clipRect, rect, rectRed;
     let overlay = {};
     let properties;
-    let cropperWidth,cropperHeight;
+    let cropperWidth, cropperHeight;
+    let clip, clipOverlay;
 
     function CropImage(canvas, draggable = false, apply = false, cancel = false, params) {
         this.canvas = canvas;
         if (cancel) {
-            this.canvas.remove(clipRect);
-            this.canvas.remove(rect);
+            this.canvas.remove(clipOverlay);
+            // this.canvas.remove(rect);
             this.canvas.remove(rectRed);
             let inst = this;
-            this.canvas.getObjects().forEach(function(object) {
-                if(object.id === 'clonedCanvasImage') {
+            this.canvas.getObjects().forEach(function (object) {
+                if (object.id === 'clonedCanvasImage') {
                     inst.canvas.remove(object);
                 }
             })
@@ -32,44 +33,52 @@ export default (function () {
         disabled = false;
         properties = params;
         canvas.backgroundColor = "#fff";
-        src = canvas.toDataURL('image/jpeg',1);
+
 
         if (drag && apply) {
             canvas.clear();
-            let overlayCropped = overlay.toDataURL('image/jpeg',1);
-            fabric.util.loadImage(overlayCropped, function (img) {
+            let image;
+            let backgroundImage = new Promise((resolve => {
+                fabric.util.loadImage(src, function (img) {
 
-                let clippedImage = new fabric.Image(img);
-                canvas.setBackgroundImage(clippedImage, canvas.renderAll.bind(canvas), {
-                    top: -(clipRect.top),
-                    left: -(clipRect.left),
-                    originX: 'center',
-                    originY: 'center',
-                });
-                canvas.setDimensions({
-                    width: clipRect.width * clipRect.scaleX,
-                    height: clipRect.height * clipRect.scaleY
-                });
-            })
+                    image = new fabric.Image(img);
+                    image.set({
+                        top: (rectRed.height / 2 - rectRed.top + clip.top),
+                        left: (rectRed.width / 2 - rectRed.left + clip.left),
+                        originX: 'center',
+                        originY: 'center',
+                    })
+                    canvas.setBackgroundImage(image, canvas.renderAll.bind(canvas));
+                    canvas.setHeight(rectRed.height * rectRed.scaleY)
+                    canvas.setWidth(rectRed.width * rectRed.scaleX)
+                    canvas.calcOffset();
+                    bgImage = canvas.toDataURL("image/jpeg", 1)
+                    resolve()
+                })
+            }))
 
             drag = false;
             apply = false;
-            let canvasProperties = {width: clipRect.width * clipRect.scaleX, height: clipRect.height * clipRect.scaleY}
-            let croppedImage = {
-                json: this.canvas.toJSON(),
-                croppedImage: overlayCropped,
-                canvas: canvasProperties,
-                imagePosition: clipRect
-            };
-            new CanvasHistory(this.canvas, croppedImage);
-            return CropImage
+
+            return backgroundImage.then(() => {
+                canvas.setBackgroundImage(bgImage, canvas.renderAll(canvas))
+                let canvasProperties = {width: rectRed.width * rectRed.scaleX, height: rectRed.height * rectRed.scaleY}
+                let croppedImage = {
+                    json: this.canvas.toJSON(),
+                    canvas: canvasProperties,
+                    croppedImage: bgImage,
+                    imagePosition: {top: 0, left: 0}
+                };
+                new CanvasHistory(this.canvas, croppedImage);
+                return CropImage
+
+            })
         }
-        if(canvas.width <= properties.width || canvas.height <= properties.height){
-            cropperWidth =  canvas.width - 50;
+        if (canvas.width <= properties.width || canvas.height <= properties.height) {
+            cropperWidth = canvas.width - 50;
             cropperHeight = canvas.height - 50;
-        }
-        else{
-            cropperWidth =  properties.width;
+        } else {
+            cropperWidth = properties.width;
             cropperHeight = properties.height;
         }
         this.bindEvents();
@@ -77,79 +86,72 @@ export default (function () {
         this.canvas.uniScaleTransform = true;
         this.canvas.renderAll();
         let inst = this;
+        src = this.canvas.toDataURL('image/jpeg', 1);
         new fabric.Image.fromURL(src, function (oImg) {
-            rect = new fabric.Rect({
+            rectRed = new fabric.Rect({
+                left: (oImg.width - cropperWidth) / 2,
+                top: (oImg.height - cropperHeight) / 2,
+                width: cropperWidth,
+                height: cropperHeight,
+                fill: '',
+                imageWidth: oImg.width,
+                imageHeight: oImg.height,
+                cornerSize: properties.cornerSize,
+                hasControls: properties.hasControls,
+                borderColor: properties.borderColor,
+                cornerColor: properties.cornerColor,
+                cornerStyle: properties.cornerStyle,
+                transparentCorners: properties.transparentCorners,
+                hasRotatingPoint: properties.hasRotatingPoint,
+                lockUniScaling: JSON.parse(properties.lockUniScaling),
+                noScaleCache: JSON.parse(properties.noScaleCache),
+                strokeUniform: JSON.parse(properties.strokeUniform),
+
+                clipTo: function (context) {
+                    context.translate(-this.width / 2, -this.height / 2);
+                    for (let x = 0; x <= this.width; x += this.width / 3) {
+                        context.moveTo(x, 0);
+                        context.lineTo(x, this.height);
+                    }
+                    for (let y = 0; y <= this.height; y += this.height / 3) {
+                        context.moveTo(0, y);
+                        context.lineTo(this.width, y);
+                    }
+                    context.strokeStyle = properties && properties.strokeColor ? properties.strokeColor : '#000';
+                    context.stroke();
+                }
+            });
+            rectRed.setControlsVisibility({
+                tl: true,
+                mt: false,
+                tr: true,
+                ml: false,
+                mr: false,
+                bl: true,
+                mb: false,
+                br: true
+            }),
+                inst.canvas.add(rectRed);
+            inst.canvas.bringToFront(rectRed);
+            inst.canvas.setActiveObject(rectRed)
+
+            clip = {
+                left: rectRed.left,
+                top: rectRed.top,
+                right: rectRed.width + rectRed.left,
+                bottom: rectRed.height + rectRed.top
+            }
+
+            clipOverlay = new fabric.Path('M 0 0 H ' + inst.canvas.width + ' V ' + clip.top + ' H ' + clip.left + ' V '
+                + clip.bottom + ' H ' + clip.right + ' V ' + clip.top + ' H ' + inst.canvas.width + ' V ' + inst.canvas.height + ' H 0 Z', {
                 left: 0,
                 top: 0,
-                width: oImg.width,
-                height: oImg.height,
                 fill: properties.overlayColor,
-                selectable: false,
-                opacity: properties.overlayOpacity
+                opacity: properties.overlayOpacity,
+                selectable: false
             });
-            inst.canvas.add(rect);
-            fabric.Image.fromURL(src, function (oImg1) {
-                oImg1.id = 'clonedCanvasImage';
-                rectRed = new fabric.Rect({
-                    left: (oImg1.width - cropperWidth) / 2,
-                    top:  (oImg1.height - cropperHeight) / 2,
-                    width: cropperWidth,
-                    height: cropperHeight,
-                    fill: '',
-                    imageWidth: oImg1.width,
-                    imageHeight: oImg1.height,
-                    cornerSize: properties.cornerSize,
-                    hasControls: properties.hasControls,
-                    borderColor: properties.borderColor,
-                    cornerColor: properties.cornerColor,
-                    cornerStyle: properties.cornerStyle,
-                    transparentCorners: properties.transparentCorners,
-                    hasRotatingPoint: properties.hasRotatingPoint,
-                    lockUniScaling: JSON.parse(properties.lockUniScaling),
-                    noScaleCache: JSON.parse(properties.noScaleCache),
-                    strokeUniform: JSON.parse( properties.strokeUniform),
+            inst.canvas.add(clipOverlay);
 
-                    clipTo: function (context) {
-                        context.translate(-this.width / 2, -this.height / 2);
-                        for (let x = 0; x <= this.width; x += this.width / 3) {
-                            context.moveTo(x, 0);
-                            context.lineTo(x, this.height);
-                        }
-
-                        for (let y = 0; y <= this.height; y += this.height / 3) {
-                            context.moveTo(0, y);
-                            context.lineTo(this.width, y);
-                        }
-                        context.strokeStyle = properties && properties.strokeColor ? properties.strokeColor : '#000';
-                        context.stroke();
-                    }
-                });
-                rectRed.setControlsVisibility({
-                    tl:true,
-                    mt:false,
-                    tr:true,
-                    ml:false,
-                    mr:false,
-                    bl:true,
-                    mb:false,
-                    br:true
-                }),
-                    clipRect = new fabric.Rect({
-                        left: -(cropperWidth / 2),
-                        top: - (cropperHeight / 2),
-                        width: cropperWidth,
-                        height: cropperHeight,
-                        fill: '',
-                        selectable: false,
-                    });
-                oImg1.set({clipPath: clipRect, selectable: false})
-
-                inst.canvas.add(oImg1);
-                overlay = inst.canvas._objects[inst.canvas._objects.length - 1];
-                inst.canvas.add(rectRed);
-                inst.canvas.bringToFront(rectRed)
-                inst.canvas.setActiveObject(rectRed)
-            });
         });
         this.canvas.renderAll();
     };
@@ -159,33 +161,41 @@ export default (function () {
             inst.onMouseDown(o);
         });
         inst.canvas.on("object:scaling", function (e) {
+
             let target = e.target;
-            clipRect = new fabric.Rect({
-                left: target.left - (overlay.width / 2),
-                top: target.top - (overlay.height / 2),
-                width: target.width,
-                height: target.height,
-                fill: '',
-                scaleX: target.scaleX,
-                scaleY: target.scaleY,
+            let newClip = {
+                left: target.left,
+                top: target.top,
+                right: inst.canvas.width - target.left + (target.left - clip.left) * 2 + (target.width * target.scaleX) - target.width,
+                bottom: inst.canvas.height - target.top + (target.top - clip.top) * 2 + (target.height * target.scaleY) - target.height
+            }
+            let updatedPath = new fabric.Path('M 0 0 H ' + inst.canvas.width + ' V ' + newClip.top + ' H ' + newClip.left + ' V '
+                + newClip.bottom + ' H ' + newClip.right + ' V ' + newClip.top + ' H ' + inst.canvas.width + ' V ' + inst.canvas.height + ' H 0 Z');
+
+            clipOverlay.set({
+                path: updatedPath.path,
             });
-            overlay.set("clipPath", clipRect)
+            clipOverlay.setCoords();
+
             inst.canvas.renderAll()
 
         });
         inst.canvas.on('object:moving', function (e) {
             let target = e.target;
-            clipRect = new fabric.Rect({
-                left: target.left - (overlay.width / 2),
-                top: target.top - (overlay.height / 2),
-                width: target.width,
-                height: target.height,
-                fill: '',
-                scaleX: target.scaleX,
-                scaleY: target.scaleY,
+            let newClip = {
+                left: target.left,
+                top: target.top,
+                right: inst.canvas.width - target.left + (target.left - clip.left) * 2 + (target.width * target.scaleX) - target.width,
+                bottom: inst.canvas.height - target.top + (target.top - clip.top) * 2 + (target.height * target.scaleY) - target.height
+            }
+            let updatedPath = new fabric.Path('M 0 0 H ' + inst.canvas.width + ' V ' + newClip.top + ' H ' + newClip.left + ' V '
+                + newClip.bottom + ' H ' + newClip.right + ' V ' + newClip.top + ' H ' + inst.canvas.width + ' V ' + inst.canvas.height + ' H 0 Z');
+
+            clipOverlay.set({
+                path: updatedPath.path,
             });
-            overlay.set("clipPath", clipRect)
-            inst.canvas.renderAll()
+            clipOverlay.setCoords();
+            inst.canvas.renderAll();
         });
 
         CropImage.prototype.onMouseDown = function (event) {

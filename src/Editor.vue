@@ -59,10 +59,7 @@
                         let image = new fabric.Image(img);
                         image.scaleToWidth(inst.canvasWidth);
                         image.scaleToHeight(inst.canvasHeight);
-                        inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas), {
-                            top: 0,
-                            left: 0,
-                        });
+                        inst.canvas.setBackgroundImage(image, inst.canvas.renderAll.bind(inst.canvas));
                         let canvasProperties = {width: inst.canvas.width, height: inst.canvas.height};
                         let currentCanvas = {
                             json: inst.canvas.toJSON(),
@@ -414,8 +411,6 @@
                                 img.set({
                                     top: -(inst.history[inst.history.length - 1].imagePosition.top),
                                     left: -(inst.history[inst.history.length - 1].imagePosition.left),
-                                    originX: 'center',
-                                    originY: 'center'
                                 });
                                 inst.canvas.setBackgroundImage(img, inst.canvas.renderAll.bind(inst.canvas));
                             });
@@ -449,13 +444,6 @@
                             currentProperties = this.objects[this.objects.length - 1].imagePosition;
                             let inst = this;
                             fabric.Image.fromURL(this.objects[this.objects.length - 1].croppedImage, function (img) {
-                                img.set({
-
-                                    top: -(currentProperties.top),
-                                    left: -(currentProperties.left),
-                                    originX: 'center',
-                                    originY: 'center'
-                                });
                                 inst.canvas.setBackgroundImage(img, inst.canvas.renderAll.bind(inst.canvas));
                             });
                         }
@@ -526,7 +514,7 @@
 
     }
 </script>
-<style scoped>
+<style>
     .upper-canvas{
         z-index: 1;
     }
