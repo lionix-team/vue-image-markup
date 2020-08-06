@@ -78,7 +78,7 @@ export default (function () {
                         left: this.origX,
                         top: this.origY,
                         fontSize: textFontSize,
-                        fontStyle: textFontStyle,
+                        fontStyle: textFontStyle ? textFontStyle : '',
                         fontWeight: textFontWeight,
                         hasBorders: false,
                         hasControls: false
