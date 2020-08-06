@@ -5,7 +5,7 @@ export default (function () {
     let drag;
     let shape;
     let color;
-    let lineWidth, fillCircle, angle;
+    let lineWidth, fillCircle, angle,shapeId;
     let strokeDashArray;
     let borderRadius;
     let properties;
@@ -36,6 +36,7 @@ export default (function () {
             angle = properties.angle;
             strokeDashArray = properties.strokeDashArray;
             borderRadius = properties.borderRadius;
+            shapeId = properties.id
         }
         this.canvas = canvas;
         this.className = 'Shape';
@@ -119,6 +120,7 @@ export default (function () {
             activeObj = inst.canvas.getActiveObject();
             activeObj.stroke = color;
             activeObj.strokeWidth = lineWidth;
+            activeObj.id = shapeId;
             activeObj.fill = fillCircle;
             activeObj.noScaleCache = false;
             activeObj.strokeUniform = true;
@@ -206,6 +208,7 @@ export default (function () {
                 strokeDashArray: strokeDashArray,
                 rx: borderRadius,
                 ry: borderRadius,
+                id: shapeId
             });
             inst.canvas.add(rect).setActiveObject(rect);
         }
@@ -225,6 +228,7 @@ export default (function () {
                 strokeDashArray: strokeDashArray,
                 rx: borderRadius,
                 ry: borderRadius,
+                id: shapeId
             });
             inst.canvas.add(comment).setActiveObject(comment);
         }
@@ -240,7 +244,8 @@ export default (function () {
                 fill: fillCircle,
                 stroke: color,
                 strokeWidth: lineWidth,
-                strokeDashArray: strokeDashArray
+                strokeDashArray: strokeDashArray,
+                id: shapeId
             });
             inst.canvas.add(circle).setActiveObject(circle);
         }

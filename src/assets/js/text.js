@@ -3,7 +3,7 @@ import CanvasHistory from "./canvasHistory.js";
 
 export default (function () {
     let activeObject = false;
-    let drag, textColor, textFontFamily, textFontSize, customText, color, textFontStyle, textFontWeight;
+    let drag, textColor, textFontFamily, textFontSize, customText, color, textFontStyle, textFontWeight,textId;
 
     function Text(canvas, draggable = false, params) {
         this.canvas = canvas;
@@ -23,13 +23,15 @@ export default (function () {
             textFontStyle = params.fontStyle;
             textFontWeight = params.fontWeight;
             customText = params.placeholder;
+            textId = params.id;
             if (canvas.getActiveObject() && canvas.getActiveObject().hasOwnProperty('text')) {
                 canvas.getActiveObject().set({
                     fill: textColor,
                     fontFamily: textFontFamily,
                     fontSize: textFontSize,
                     fontStyle: textFontStyle,
-                    fontWeight: textFontWeight
+                    fontWeight: textFontWeight,
+                    id: textId
                 });
                 canvas.renderAll();
             }
@@ -81,7 +83,8 @@ export default (function () {
                         fontStyle: textFontStyle ? textFontStyle : '',
                         fontWeight: textFontWeight,
                         hasBorders: false,
-                        hasControls: false
+                        hasControls: false,
+                        id: textId
                     });
 
                     text.selectionStart = 0;

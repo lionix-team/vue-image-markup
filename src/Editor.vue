@@ -60,6 +60,16 @@
             new CanvasHistory(this.canvas, currentCanvas);
         },
         methods: {
+            getObjectsById(objectId){
+                let objects = this.canvas.getObjects();
+                let findedObject = [];
+                objects.map((object) => {
+                    if(object.id && object.id == objectId) {
+                        findedObject.push(object);
+                    }
+                })
+                return findedObject;
+            },
             changeColor(colorProperty) {
                 this.color = colorProperty;
                 this.set(this.currentActiveTool)

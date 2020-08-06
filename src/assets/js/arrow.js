@@ -65,6 +65,7 @@ export default (function () {
     let lineWidth;
     let fillArrow;
     let strokeDashArray;
+    let arrowId;
     let properties;
 
     function Arrow(canvas, draggable = false, params) {
@@ -86,6 +87,7 @@ export default (function () {
             color = params.stroke;
             lineWidth = params.strokeWidth;
             strokeDashArray = params.strokeDashArray;
+            arrowId = params.id;
         }
         this.canvas = canvas;
         this.className = 'Arrow';
@@ -200,6 +202,8 @@ export default (function () {
             objectCaching: false,
             perPixelTargetFind: true,
             heads: [1, 0],
+            id: arrowId ? arrowId : 'arrow'
+
         });
         inst.canvas.add(this.line).setActiveObject(this.line);
 

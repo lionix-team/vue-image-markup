@@ -68,9 +68,11 @@ fontSize            | `32`       | font-size
 fontWeight          | `100`      | font-weight(`100`,`200`,`300`,`400`,`500`,`600`,`700`,`bold`,`normal`)
 fontStyle           | `normal`   | font-style(`normal`,`italic`,`oblique`)
 placeholder         | `Add Text` | default text placeholder when the text will be added
+id                  |       `''`     | text id
+                                               
 or you can customize your editor text mode styles by overwriting default values.
 ```javascript
- let textModeOptions = { fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}
+ let textModeOptions = { id: 'title', fill: 'red', fontFamily: 'Verdana',fontSize: 16, placeholder: 'Type something'}
  this.$refs.editor.set('text',textModeOptions)
 ```
  #### Circle Mode
@@ -89,6 +91,7 @@ left                | `0`                   |Left position of an object
 radius            | `20`                | Radius of the circle
 strokeUniform       | `true`         | When `false`, the stoke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
 noScaleCache        | `false`         |When `true`, cache does not get updated during scaling. The picture will get block if scaled too much and will be redrawn with correct details at the end of scaling. this setting is performance and application dependant
+id        | `''`         | Circle id
 
 or you can customize your editor circle mode styles by overwriting default values. 
 ```javascript
@@ -113,7 +116,7 @@ left                | `0`                   |Left position of rectangle
 opacity            | `1`                    | Opacity of rectangle
 strokeUniform       | `true`                | When `false`, the stoke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
 noScaleCache        | `false`               |When `true`, cache does not get updated during scaling. The picture will get block if scaled too much and will be redrawn with correct details at the end of scaling. this setting is performance and application dependant
-
+id        | `''`         | Rectangle id
 or you can customize your editor rectangle mode styles by overwriting default values. 
 ```javascript
  let customizeRectangle = { fill: 'blue',stroke: 'white',strokeWidth: "5" }
@@ -136,7 +139,7 @@ stroke              | `black`              | Arrow is rendered via stroke and th
 strokeWidth         | `7`                  | Arrow border width
 strokeUniform       | `true`                | When `false`, the stroke width will scale with the object. When `true`, the stroke will always match the exact pixel size entered for stroke width
 noScaleCache        | `false`               |When `true`, cache does not get updated during scaling. The picture will get blocky if scaled too much and will be redrawn with correct details at the end of scaling. this setting is performance and application dependant
-
+id        | `''`         | Arrow id
 or you can customize your editor's arrow mode styles by overwriting default values. 
 ```javascript
  let customizeArrow = { stroke: 'red',strokeWidth: "3" }
@@ -227,6 +230,11 @@ mounted:{
  this.$refs.editor.redo()
 ```
 
+## Function getObjectsById(id)
+##### With the help of getObjectsById(id) method you will be able to get object by id
+```javascript
+ this.$refs.editor.getObjectsById('title')
+```
 
 ## Credits
 
