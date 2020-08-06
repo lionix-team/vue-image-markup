@@ -1,7 +1,6 @@
 <template>
     <div class="custom-editor">
-        <canvas id="c">
-        </canvas>
+        <canvas :id="editorId"></canvas>
     </div>
 </template>
 
@@ -15,7 +14,18 @@
 
     export default {
         name: 'Editor',
-        props: ['canvasWidth', 'canvasHeight'],
+        props: {
+            canvasWidth: {
+                type: [String,Number]
+            },
+            canvasHeight: {
+                type: [String,Number]
+            },
+            editorId: {
+                type: [String,Number],
+                default: 'c'
+            }
+        },
         data() {
             return {
                 canvas: null,
@@ -42,7 +52,7 @@
 
         },
         mounted() {
-            this.canvas = new fabric.Canvas('c');
+            this.canvas = new fabric.Canvas(this.editorId);
             this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});
             this.canvas.backgroundColor = "#fff";
             let canvasProperties = {width: this.canvas.width, height: this.canvas.height}
@@ -50,6 +60,10 @@
             new CanvasHistory(this.canvas, currentCanvas);
         },
         methods: {
+            changeColor(colorProperty) {
+                this.color = colorProperty;
+                this.set(this.currentActiveTool)
+            },
             setBackgroundImage(imageUrl, backgroundColor = "#fff") {
                 let img = new Image();
                 this.toDataUrl(imageUrl, (dataUri) => {

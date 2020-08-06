@@ -27,7 +27,7 @@ Then you'll be able to use Editor component.
 
 You must give your editor component ```ref```,which will help you to call the functions to set editor mode,clean objects or undo/redo your changes.
 ```vue
-<Editor :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" ref="editor"/>
+<Editor :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" ref="editor" :editorId="1"/>
 
 mounted() {
     $this.$refs.editor.set(this.editor.mode,this.editor.options);
@@ -41,6 +41,7 @@ mounted() {
 
 `ref` with the help of ref, you will control the editor
 
+`editorId (optional)` will set editor id, allowing the use of multiple editors in the same component
 ## Function set(`type`,`params`)
 ##### With the set() function you choose editor's mode,which should get two parameters `type` and `params`
 Editor have 6 modes
