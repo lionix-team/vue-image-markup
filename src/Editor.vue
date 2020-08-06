@@ -124,6 +124,7 @@
                             fontStyle: (params && params.fontStyle) ? params.fontStyle : this.fontStyle,
                             fontWeight: (params && params.fontWeight) ? params.fontWeight : this.fontWeight,
                             placeholder: (params && params.placeholder) ? params.placeholder : 'Add Text',
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.addText(this.params);
                         break;
@@ -141,7 +142,8 @@
                             radius: (params && params.radius) ? params.radius : 20,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
-                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.customCircle(type, this.params);
                         break;
@@ -162,6 +164,7 @@
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
                             strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
                             borderRadius: (params && params.borderRadius) ? params.borderRadius : 0,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.customRect(type, this.params);
                         break;
@@ -181,7 +184,8 @@
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
                             strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
-                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0
+                            borderRadius: (params && params.borderRadius) ? params.borderRadius : 0,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.customRect(type, this.params);
                         break;
@@ -200,7 +204,8 @@
                             opacity: (params && params.opacity) ? params.opacity : 1,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
-                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.customRect(type, this.params);
                         break;
@@ -217,7 +222,8 @@
                             strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
                             strokeUniform: (params && params.strokeUniform) ? params.strokeUniform : true,
                             noScaleCache: (params && params.noScaleCache) ? params.noScaleCache : false,
-                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false
+                            strokeDashArray: (params && params.strokeDashArray) ? params.strokeDashArray : false,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.drawArrow(this.params);
                         break;
@@ -227,6 +233,7 @@
                             stroke: (params && params.stroke) ? params.stroke : this.color,
                             strokeWidth: (params && params.strokeWidth) ? params.strokeWidth : this.strokeWidth,
                             drawingMode: (params && params.drawingMode) ? params.drawingMode : true,
+                            id: (params && params.id) ? params.id : '',
                         };
                         this.drawing(this.params);
                         break;
@@ -488,6 +495,7 @@
                     blur: 0,
                     affectStroke: true,
                     color: params.stroke,
+                    id: params.id ? params.id : ''
                 });
                 let inst = this;
                 this.canvas.on("object:added", function () {
