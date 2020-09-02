@@ -11,19 +11,21 @@
     import Arrow from './assets/js/arrow';
     import CropImage from './assets/js/crop';
     import CanvasHistory from './assets/js/canvasHistory';
-
     export default {
         name: 'Editor',
         props: {
             canvasWidth: {
-                type: [String,Number]
+                type: [String,Number],
+                required: true
             },
             canvasHeight: {
-                type: [String,Number]
+                type: [String,Number],
+                required: true
             },
             editorId: {
                 type: [String,Number],
-                default: 'c'
+                default: 'c',
+                required: false
             }
         },
         data() {
@@ -47,7 +49,6 @@
                 fontSize: 32,
                 croppedImage: false,
                 history: [],
-
             }
 
         },
