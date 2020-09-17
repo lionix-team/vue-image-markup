@@ -44,7 +44,7 @@ mounted() {
 `editorId (optional)` will set editor id, allowing the use of multiple editors in the same component
 ## Function set(`type`,`params`)
 ##### With the set() function you choose editor's mode,which should get two parameters `type` and `params`
-Editor have 6 modes
+Editor have 7 modes
  - text
  - circle
  - rect
@@ -52,6 +52,7 @@ Editor have 6 modes
  - arrow
  - freeDrawing
  - crop
+ - eraser
  
 `params`  parameter must be an object which set the type and every type have it's own options.
 
@@ -190,6 +191,13 @@ or you can customize your editor crop mode styles by overwriting default values.
 ```javascript
 this.$refs.editor.applyCropping()
 ```
+ #### Eraser Mode
+##### `set('eraser')` to enable eraser mode in editor, which will remove the object from editor when the object will be clicked.
+```javascript
+this.$refs.editor.set('eraser')
+```
+
+
 ## Function setBackgroundImage(imageUrl)
 ##### `setBackgroundImage(imageUrl)` to set editor background image
 ```vue
