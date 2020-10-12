@@ -114,6 +114,7 @@
                 this.cancelCroppingImage()
             },
             set(type, params) {
+                this.canvas.off('mouse:down');
                 switch (type) {
                     case "text":
                         this.currentActiveTool = type;
@@ -262,7 +263,6 @@
                         new CropImage(this.canvas, true, false, false, this.params);
                         break;
                     case 'eraser':
-                        this.canvas.off('mouse:down');
                         this.currentActiveTool = type;
                         let inst = this;
                         this.canvas.isDrawingMode = false;
