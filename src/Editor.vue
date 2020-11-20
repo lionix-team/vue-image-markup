@@ -23,7 +23,7 @@
                 required: true
             },
             editorId: {
-                type: [String,Number],
+                type: String,
                 default: 'c',
                 required: false
             }
