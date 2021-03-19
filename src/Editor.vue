@@ -26,6 +26,11 @@
                 type: String,
                 default: 'c',
                 required: false
+            },
+            backgroundColor: {
+                type: String,
+                default: '#fff',
+                required: false
             }
         },
         data() {
@@ -55,7 +60,7 @@
         mounted() {
             this.canvas = new fabric.Canvas(this.editorId);
             this.canvas.setDimensions({width: this.canvasWidth, height: this.canvasHeight});
-            this.canvas.backgroundColor = "#fff";
+            this.canvas.backgroundColor = this.backgroundColor;
             let canvasProperties = {width: this.canvas.width, height: this.canvas.height}
             let currentCanvas = {json: this.canvas.toJSON(), canvas: canvasProperties};
             new CanvasHistory(this.canvas, currentCanvas);
